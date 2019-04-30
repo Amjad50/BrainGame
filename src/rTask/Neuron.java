@@ -13,15 +13,12 @@ public class Neuron {
     Neuron neuron;
     HashMap<Neuron, Pair> children = new HashMap<>();
     
-    public Neuron(Neuron neuron, int id, int distance, int time) {
-        this.neuron = neuron;
-        this.distance = distance;
-        this.time = time;
-        Pair<Integer, Integer> pair = Pair.createPair(distance, time);
-        pair.getElement0();
-        pair.getElement1();
-        children.put(neuron, pair);
+    public Neuron(int id, HashMap children) {
         this.id = id;
+        Pair pair = Pair.createPair(distance, time);
+        pair.getDistance();
+        pair.getTime();
+        children.put(neuron, pair);
     }
 
 }
