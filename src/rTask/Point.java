@@ -5,7 +5,7 @@ import javafx.util.Pair;
 
 /**
  *
- * @Sudo
+ * @SudoCode
  */
 
 public class Point {
