@@ -8,7 +8,6 @@ import java.util.HashMap;
  */
 
 public class Neuron {
-    int distance, time;
     int id;
     Neuron neuron;
     HashMap<Neuron, Pair> children = new HashMap<>();
