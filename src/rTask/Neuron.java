@@ -17,7 +17,9 @@ public class Neuron {
         this.neuron = neuron;
         this.distance = distance;
         this.time = time;
-        Pair pair = new Pair(distance,time);
+        Pair<Integer, Integer> pair = Pair.createPair(distance, time);
+        pair.getElement0();
+        pair.getElement1();
         children.put(neuron, pair);
         this.id = id;
     }
