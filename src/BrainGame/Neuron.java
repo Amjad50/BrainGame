@@ -2,22 +2,17 @@ package BrainGame;
 
 import java.util.HashMap;
 
-/**
- *
- * @SudoCode
- */
 
 public class Neuron {
-    int id,distance,time;
-    Neuron neuron;
-    HashMap<Neuron, Pair> children = new HashMap<>();
+    int id;
+    HashMap<Neuron, DistanceTimePair> children = new HashMap<>();
     
-    public Neuron(int id, HashMap children) {
+    public Neuron(int id) {
         this.id = id;
-        Pair pair = Pair.createPair(distance, time);
-        pair.getDistance();
-        pair.getTime();
-        children.put(neuron, pair);
     }
 
+    public void addConnection(Neuron other, int distance, int time) {
+        DistanceTimePair pair = new DistanceTimePair(distance, time);
+        this.children.put(other, pair);
+    }
 }
