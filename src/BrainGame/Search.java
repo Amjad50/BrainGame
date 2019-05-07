@@ -4,25 +4,28 @@ import java.util.HashMap;
 
 public class Search {
 
-    public static Path search(Neuron[] graph, Neuron start, Neuron end) {
-        boolean[] passed = new boolean[graph.length];
-        int[] time = new int[graph.length];
-        int[] distance = new int[graph.length];
-        int[] prev = new int[graph.length];
+    public static Path search(Brain brain, int start, int end) {
+        boolean[] passed = new boolean[brain.getSize()];
+        int[] time = new int[brain.getSize()];
+        int[] distance = new int[brain.getSize()];
+        int[] prev = new int[brain.getSize()];
+
 //        Initialize all node to not be visited yet
-        for (int i = 0; i < graph.length; i++) {
+        for (int i = 0; i < brain.getSize(); i++) {
             passed[i] = false;
             distance[i] = time[i] = Integer.MAX_VALUE;
         }
-        time[start.id] = distance[start.id] = 0;
-        prev[start.id] = -1;
+
+        time[start] = distance[start] = 0;
+        prev[start] = -1;
+
 //        Find the shortest path
-        for (int cnt = 0; cnt < graph.length; cnt++) {
+        for (int cnt = 0; cnt < brain.getSize(); cnt++) {
             int z = minTime(time, passed);
 
             passed[z] = true;
 
-            for (HashMap.Entry<Neuron, DistanceTimePair> entry : graph[z].children.entrySet()) {
+            for (HashMap.Entry<Brain.Neuron, DistanceTimePair> entry : brain.getNeuron(z).children.entrySet()) {
                 if (!passed[entry.getKey().id] && time[z] != Integer.MAX_VALUE && time[z] + entry.getValue().getTime() < time[entry.getKey().id]) {
                     time[entry.getKey().id] = time[z] + entry.getValue().getTime();
                     distance[entry.getKey().id] = distance[z] + entry.getValue().getDistance();
@@ -32,13 +35,13 @@ public class Search {
         }
 
         Path path = new Path();
-        path.addFirst(end);
-        int u = end.id;
+        path.addFirst(brain.getNeuron(end));
+        int u = end;
         while (prev[u] != -1)
-            path.addFirst(graph[(u = prev[u])]);
+            path.addFirst(brain.getNeuron((u = prev[u])));
 
-        path.setDistance(distance[end.id]);
-        path.setTime(time[end.id]);
+        path.setDistance(distance[end]);
+        path.setTime(time[end]);
 
         return path;
     }
