@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 public class Path {
 
-    LinkedList<Neuron> path = new LinkedList<>();
-    int Distance, Time;
+    private LinkedList<Neuron> path = new LinkedList<>();
+    private int Distance, Time;
 
     public Path() {
         this.Distance = 0;
@@ -17,8 +17,8 @@ public class Path {
         this.Time = Time;
     }
 
-    public void add(Neuron e) {
-        path.add(e);
+    public void addFirst(Neuron e) {
+        path.addFirst(e);
     }
 
     public void addTime(int Time) {
@@ -59,5 +59,14 @@ public class Path {
 
     public Neuron getLast() {
         return path.getLast();
+    }
+
+    @Override
+    public String toString() {
+        return "Path{" +
+                "path=" + path +
+                ", Distance=" + Distance +
+                ", Time=" + Time +
+                '}';
     }
 }

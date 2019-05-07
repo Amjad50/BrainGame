@@ -23,4 +23,9 @@ public class Neuron {
             other.addConnection(this, distance, time, false);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Neuron(" + id + ')';
+    }
 }
