@@ -43,6 +43,10 @@ public class Brain {
         nodes[source].children.replace(nodes[distance], new DistanceTimePair(distance, time));
     }
 
+    public boolean checkConnection(int source, int distention) {
+        return nodes[source].hasConnection(nodes[distention]);
+    }
+
     public int getSize() {
         return nodes.length;
     }
