@@ -30,6 +30,10 @@ public class Tester {
             if (source == -1) {
                 break;
             }
+            if(source < 0) {
+                System.out.println("Entered number is too small");
+                continue;
+            }
             if (source > b.getSize() - 1) {
                 System.out.println("Entered number is too big ");
                 continue;
@@ -38,8 +42,12 @@ public class Tester {
              if (dest == -1) {
                 break;
             }
+            if(dest < 0) {
+                System.out.println("Entered number is too small");
+                continue;
+            }
             if (dest > b.getSize() - 1) {
-                System.out.print("Entered number is too big ");
+                System.out.println("Entered number is too big ");
                 continue;
             }
             int dist = s.nextInt();
@@ -63,48 +71,9 @@ public class Tester {
                 b.connect(source, dest, dist, time);
                 System.out.println("Connection between " + source + " and " + dest + " sucessfully estabblished!");
             }
-//            System.out.print("Insert which node you want to add connections (start from 0, press -1 to quit)");
-//            n1 = s.nextInt();
-//            if (n1 == -1) {
-//                break;
-//            }
-//            if (n1 > b.getSize() - 1) {
-//                System.out.println("Entered number is too big ");
-//                continue;
-//            } 
-//            else {
-//                System.out.print("To which node you want " + n1 + " to connect to?");
-//                int n2 = s.nextInt();
-//                if (n2 > b.getSize() - 1) {
-//                    System.out.print("Entered number is too big ");
-//                    continue;
-//                }
-//            if (b.checkConnection(n1, n2)) {
-//                System.out.print(n1 + " and " + n2 + " already have a connection , do you want to edit it? (press -1 to decline)");
-//                {
-//                    int ans = s.nextInt();
-//                    if (ans == -1) {
-//                        continue;
-//                    } else {
-//                        edit = true;
-//                    }
-//                }
-//            }
-//                System.out.print("Enter the distance from " + n1 + " to " + n2 + ": ");
-//                int dist = s.nextInt();
-//                System.out.print("Enter the time it takes to go from " + n1 + " to " + n2 + ": ");
-//                int time = s.nextInt();
-//                if (edit) {
-//                    b.editConnection(n1, n2, dist, time);
-//                    System.out.println("Connection between " + n1 + " and " + n2 + " has been updated");
-//                } else {
-//                    b.connect(n1, n2, dist, time);
-//
-//                    System.out.println("Connection between " + n1 + " and " + n2 + " sucessfully created");
-//                }
-//
-//            }
         }
+
+        System.out.println("Now you can know the distance and time of the best path between two nodes.");
         source = 0;
         dest = 0;
         while (source != -1 || dest!=-1) {
@@ -112,6 +81,10 @@ public class Tester {
             source = s.nextInt();
             if (source == -1) {
                 break;
+            }
+            if(source < 0) {
+                System.out.println("Entered number is too small");
+                continue;
             }
             if (source > b.getSize() - 1) {
                 System.out.println("Entered source node is too big ");
@@ -121,11 +94,26 @@ public class Tester {
              if (dest == -1) {
                 break;
             }
-            if (dest > b.getSize() - 1) {
-                System.out.print("Entered destination node is too big ");
+            if(dest < 0) {
+                System.out.println("Entered number is too small");
                 continue;
             }
-            System.out.println(Search.search(b, source, dest));
+            if (dest > b.getSize() - 1) {
+                System.out.println("Entered destination node is too big ");
+                continue;
+            }
+            Path path = Search.search(b, source, dest);
+
+            System.out.printf("The shortest path will take %d seconds, and its total distance is %s\n", path.getTime(), path.getDistance());
+            if(path.getPath().size() == 0){
+                System.out.printf("There is not path to get from %d to %d\n", source, dest);
+            }else {
+                System.out.println("The path from start to end is: ");
+                for (Brain.Neuron neuron : path.getPath()) {
+                    System.out.print(neuron.id + " ");
+                }
+                System.out.println();
+            }
         }
 
     }

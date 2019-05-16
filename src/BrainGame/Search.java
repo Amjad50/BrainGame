@@ -14,6 +14,7 @@ public class Search {
         for (int i = 0; i < brain.getSize(); i++) {
             passed[i] = false;
             distance[i] = time[i] = Integer.MAX_VALUE;
+            prev[i] = -1;
         }
 
         time[start] = distance[start] = 0;
@@ -35,8 +36,11 @@ public class Search {
         }
 
         Path path = new Path();
-        path.addFirst(brain.getNeuron(end));
         int u = end;
+        if(prev[u] == -1)
+            return path;
+
+        path.addFirst(brain.getNeuron(end));
         while (prev[u] != -1)
             path.addFirst(brain.getNeuron((u = prev[u])));
 
