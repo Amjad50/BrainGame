@@ -60,8 +60,8 @@ public class Brain {
         return getSize() == 0;
     }
 
-    class Neuron {
-        int id;
+    public class Neuron {
+        public int id;
         HashMap<Neuron, DistanceTimePair> children = new HashMap<>();
 
         private Neuron(int id) {

@@ -1,6 +1,6 @@
-package BrainGame.GUI;
+import BrainGame.GUI.MainApplication;
 
-public class StartApp {
+public class GUIStart {
     public static void main(String[] args) {
         new MainApplication().run();
     }
