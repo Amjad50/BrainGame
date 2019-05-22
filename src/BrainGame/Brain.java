@@ -62,7 +62,7 @@ public class Brain {
 
     public class Neuron {
         public int id;
-        HashMap<Neuron, DistanceTimePair> children = new HashMap<>();
+        public HashMap<Neuron, DistanceTimePair> children = new HashMap<>();
 
         private Neuron(int id) {
             this.id = id;
