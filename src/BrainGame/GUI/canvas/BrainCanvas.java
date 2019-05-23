@@ -42,7 +42,8 @@ public class BrainCanvas {
     private Point2D[] circles = null;
     private ArrayList<Point2D> connections;
 
-    private boolean canDrawLine = true;
+    //used to indicate that we can draw or move or delete (any action)
+    private boolean canContinueAction = false;
     private Point2D start, end;
     private int startCircle, endCircle;
 
@@ -147,13 +148,16 @@ public class BrainCanvas {
             }
 
             int counter = 0;
-            for (Point2D circle : circles) {
+            for (int i = 0; i < circles.length; i++) {
+                Point2D circle = circles[i];
                 graphics.setFill(Color.ORANGE);
                 graphics.fillOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
                 graphics.setStroke(Color.BLUE);
                 graphics.setTextAlign(TextAlignment.CENTER);
                 graphics.setTextBaseline(VPos.CENTER);
                 graphics.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 23));
+                if (currentMode == EditMode.MOVE && canContinueAction && i == startCircle)
+                    graphics.setStroke(Color.RED);
                 graphics.strokeOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
                 graphics.setFill(Color.BLUE);
                 graphics.fillText("" + counter++, circle.getX(), circle.getY());
@@ -168,20 +172,21 @@ public class BrainCanvas {
         switch (mode) {
             case START:
                 node = getIntersection(x, y);
-                canDrawLine = node != -1;
-                if (canDrawLine) {
+                canContinueAction = node != -1;
+                if (canContinueAction) {
                     start = circles[node];
                     startCircle = node;
                     end = new Point2D(x, y);
                 }
                 break;
             case DURING:
-                if (canDrawLine) {
+                if (canContinueAction) {
                     end = new Point2D(x, y);
                 }
                 break;
             case END:
-                if (canDrawLine) {
+                if (canContinueAction) {
+                    canContinueAction = false;
                     node = getIntersection(x, y);
                     if (node != -1) {
                         end = circles[node];
@@ -237,8 +242,25 @@ public class BrainCanvas {
         }
     }
 
-    //TODO: implement this
     private void moveHandler(double x, double y, ClickMode mode) {
+        int node;
+        switch (mode){
+            case START:
+                if((node = getIntersection(x, y)) != -1){
+                    canContinueAction = true;
+                    startCircle = node;
+                }
+                break;
+            case DURING:
+                if(canContinueAction) {
+                    circles[startCircle] = new Point2D(x, y);
+                }
+                break;
+            case END:
+                if( canContinueAction){
+                    canContinueAction = false;
+                }
+        }
     }
 
     //TODO: implement this
