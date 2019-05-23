@@ -292,6 +292,7 @@ public class BrainCanvas {
                     try {
                         brain.removeConnection(startCircle, endCircle);
                         connections.remove(new Point2D(startCircle, endCircle));
+                        connections.remove(new Point2D(endCircle, startCircle));
                     } catch (NoConnectionException e) {
                         Alert alertdialog = new Alert(Alert.AlertType.ERROR);
                         alertdialog.setTitle("Disconnection Error");
