@@ -157,12 +157,12 @@ public class BrainCanvas {
                 graphics.setTextAlign(TextAlignment.CENTER);
                 graphics.setTextBaseline(VPos.CENTER);
                 graphics.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 23));
-                if(canContinueAction && i == startCircle) {
+                if (canContinueAction && i == startCircle) {
                     if (currentMode == EditMode.MOVE)
                         graphics.setStroke(Color.GREEN);
-                    if(currentMode == EditMode.DISCONNECT)
+                    if (currentMode == EditMode.DISCONNECT)
                         graphics.setStroke(Color.RED);
-                    if(currentMode == EditMode.EDIT)
+                    if (currentMode == EditMode.EDIT)
                         graphics.setStroke(Color.DIMGRAY);
                 }
                 graphics.strokeOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
@@ -198,26 +198,27 @@ public class BrainCanvas {
                     if (node != -1) {
                         end = circles[node];
                         endCircle = node;
-                        connectPopup(pair -> {
-                            try {
-                                if (pair.getTime() > 0 && pair.getDistance() > 0)
-                                    brain.connect(startCircle, endCircle, pair.getDistance(), pair.getTime());
-                                else {
+                        if (endCircle != startCircle)
+                            connectPopup(pair -> {
+                                try {
+                                    if (pair.getTime() > 0 && pair.getDistance() > 0)
+                                        brain.connect(startCircle, endCircle, pair.getDistance(), pair.getTime());
+                                    else {
+                                        Alert alertdialog = new Alert(Alert.AlertType.ERROR);
+                                        alertdialog.setTitle("Connection Error");
+                                        alertdialog.setHeaderText("Oops, you cannot create a connection with non or negative values");
+                                        alertdialog.setContentText("Please specify correct non-negative values");
+                                        alertdialog.showAndWait();
+                                    }
+                                    connections.add(new Point2D(startCircle, endCircle));
+                                } catch (AlreadyConnectedException e) {
                                     Alert alertdialog = new Alert(Alert.AlertType.ERROR);
                                     alertdialog.setTitle("Connection Error");
-                                    alertdialog.setHeaderText("Oops, you cannot create a connection with non or negative values");
-                                    alertdialog.setContentText("Please specify correct non-negative values");
+                                    alertdialog.setHeaderText("Oops, you cannot add connection on top of another. Use edit connection");
+                                    alertdialog.setContentText("Cannot connect these two nodes");
                                     alertdialog.showAndWait();
                                 }
-                                connections.add(new Point2D(startCircle, endCircle));
-                            } catch (AlreadyConnectedException e) {
-                                Alert alertdialog = new Alert(Alert.AlertType.ERROR);
-                                alertdialog.setTitle("Connection Error");
-                                alertdialog.setHeaderText("Oops, you cannot add connection on top of another. Use edit connection");
-                                alertdialog.setContentText("Cannot connect these two nodes");
-                                alertdialog.showAndWait();
-                            }
-                        });
+                            });
                         start = end = null;
                         startCircle = endCircle = -1;
                     } else
@@ -288,7 +289,7 @@ public class BrainCanvas {
                 // now is the end node
                 if (canContinueAction) {
                     canContinueAction = false;
-                    if(startCircle == endCircle) {
+                    if (startCircle == endCircle) {
                         return;
                     }
                     try {
@@ -329,23 +330,23 @@ public class BrainCanvas {
                 // now is the end node
                 if (canContinueAction) {
                     canContinueAction = false;
-                    if(startCircle == endCircle) {
+                    if (startCircle == endCircle) {
                         return;
                     }
-                    if(brain.checkConnection(startCircle, endCircle)) {
-                            connectPopup(pair -> {
-                                if(pair.getTime() > 0 && pair.getTime() > 0) {
-                                    try {
-                                        brain.editConnection(startCircle, endCircle, pair.getDistance(), pair.getTime());
-                                    } catch (NoConnectionException e) {
-                                        Alert alertdialog = new Alert(Alert.AlertType.ERROR);
-                                        alertdialog.setTitle("Edition Error");
-                                        alertdialog.setHeaderText("Oops, you cannot edit a non connected nodes. Please add connection.");
-                                        alertdialog.setContentText("Cannot edit connection between these two nodes");
-                                        alertdialog.showAndWait();
-                                    }
+                    if (brain.checkConnection(startCircle, endCircle)) {
+                        connectPopup(pair -> {
+                            if (pair.getTime() > 0 && pair.getTime() > 0) {
+                                try {
+                                    brain.editConnection(startCircle, endCircle, pair.getDistance(), pair.getTime());
+                                } catch (NoConnectionException e) {
+                                    Alert alertdialog = new Alert(Alert.AlertType.ERROR);
+                                    alertdialog.setTitle("Edition Error");
+                                    alertdialog.setHeaderText("Oops, you cannot edit a non connected nodes. Please add connection.");
+                                    alertdialog.setContentText("Cannot edit connection between these two nodes");
+                                    alertdialog.showAndWait();
                                 }
-                            });
+                            }
+                        });
                     } else {
                         Alert alertdialog = new Alert(Alert.AlertType.ERROR);
                         alertdialog.setTitle("Edition Error");
