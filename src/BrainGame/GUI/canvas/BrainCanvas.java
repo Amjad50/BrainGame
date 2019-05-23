@@ -201,8 +201,10 @@ public class BrainCanvas {
                         if (endCircle != startCircle)
                             connectPopup(pair -> {
                                 try {
-                                    if (pair.getTime() > 0 && pair.getDistance() > 0)
+                                    if (pair.getTime() > 0 && pair.getDistance() > 0) {
                                         brain.connect(startCircle, endCircle, pair.getDistance(), pair.getTime());
+                                        connections.add(new Point2D(startCircle, endCircle));
+                                    }
                                     else {
                                         Alert alertdialog = new Alert(Alert.AlertType.ERROR);
                                         alertdialog.setTitle("Connection Error");
@@ -210,7 +212,6 @@ public class BrainCanvas {
                                         alertdialog.setContentText("Please specify correct non-negative values");
                                         alertdialog.showAndWait();
                                     }
-                                    connections.add(new Point2D(startCircle, endCircle));
                                 } catch (AlreadyConnectedException e) {
                                     Alert alertdialog = new Alert(Alert.AlertType.ERROR);
                                     alertdialog.setTitle("Connection Error");
