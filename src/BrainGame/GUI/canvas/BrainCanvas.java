@@ -188,7 +188,7 @@ public class BrainCanvas {
                         endCircle = node;
                         connectPopup(pair -> {
                             try {
-                                if (pair.getTime() > 0 || pair.getDistance() > 0)
+                                if (pair.getTime() > 0 && pair.getDistance() > 0)
                                     brain.connect(startCircle, endCircle, pair.getDistance(), pair.getTime());
                                 else {
                                     Alert alertdialog = new Alert(Alert.AlertType.ERROR);
