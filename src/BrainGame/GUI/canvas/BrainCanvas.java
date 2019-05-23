@@ -5,6 +5,7 @@ import BrainGame.GUI.Controllers.NewConnectionDialogController;
 import BrainGame.handlers.ConnectDialogHandler;
 import BrainGame.handlers.ModeHandler;
 import BrainGame.tools.AlreadyConnectedException;
+import BrainGame.tools.NoConnectionException;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -157,6 +158,8 @@ public class BrainCanvas {
                 graphics.setTextBaseline(VPos.CENTER);
                 graphics.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 23));
                 if (currentMode == EditMode.MOVE && canContinueAction && i == startCircle)
+                    graphics.setStroke(Color.GREEN);
+                if(currentMode == EditMode.DISCONNECT && canContinueAction && i == startCircle)
                     graphics.setStroke(Color.RED);
                 graphics.strokeOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
                 graphics.setFill(Color.BLUE);
@@ -244,27 +247,63 @@ public class BrainCanvas {
 
     private void moveHandler(double x, double y, ClickMode mode) {
         int node;
-        switch (mode){
+        switch (mode) {
             case START:
-                if((node = getIntersection(x, y)) != -1){
+                if ((node = getIntersection(x, y)) != -1) {
                     canContinueAction = true;
                     startCircle = node;
                 }
                 break;
             case DURING:
-                if(canContinueAction) {
+                if (canContinueAction) {
                     circles[startCircle] = new Point2D(x, y);
                 }
                 break;
             case END:
-                if( canContinueAction){
+                if (canContinueAction) {
                     canContinueAction = false;
                 }
         }
     }
 
-    //TODO: implement this
     private void disconnectHandler(double x, double y, ClickMode mode) {
+        int node;
+        switch (mode) {
+            case START:
+                if ((node = getIntersection(x, y)) != -1) {
+                    // this is the end node
+                    if (canContinueAction) {
+                        endCircle = node;
+                    } else {
+                        // first node
+                        startCircle = node;
+                    }
+                }
+                break;
+            case DURING:
+                break;
+            case END:
+                // now is the end node
+                if (canContinueAction) {
+                    canContinueAction = false;
+                    if(startCircle == endCircle) {
+                        return;
+                    }
+                    try {
+                        brain.removeConnection(startCircle, endCircle);
+                        connections.remove(new Point2D(startCircle, endCircle));
+                    } catch (NoConnectionException e) {
+                        Alert alertdialog = new Alert(Alert.AlertType.ERROR);
+                        alertdialog.setTitle("Disconnection Error");
+                        alertdialog.setHeaderText("Oops, you cannot remove a connection that is not there.");
+                        alertdialog.setContentText("Cannot disconnect these two nodes");
+                        alertdialog.showAndWait();
+                    }
+                } else {
+                    // start node end selection
+                    canContinueAction = true;
+                }
+        }
     }
 
     //TODO: implement this
