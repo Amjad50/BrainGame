@@ -39,7 +39,7 @@ public class Brain {
         if (!nodes[source].hasConnection(nodes[distention]))
             throw new NoConnectionException(source, distention);
 
-        nodes[source].children.replace(nodes[distance], new DistanceTimePair(distance, time));
+        nodes[source].children.replace(nodes[distention], new DistanceTimePair(distance, time));
     }
 
     public boolean checkConnection(int source, int distention) {

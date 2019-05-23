@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrainGame.GUI.Controllers.NewConnectionDialogController">
+<BorderPane prefHeight="200.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrainGame.GUI.Controllers.ConnectionDialogController">
     <top>
-        <Text text="Creating connection between a and b neurons. " BorderPane.alignment="CENTER">
+        <Text text="Connection between two neurons. " BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets top="20.0" />
          </BorderPane.margin></Text>

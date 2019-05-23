@@ -1,7 +1,7 @@
 package BrainGame.GUI.canvas;
 
 import BrainGame.Brain;
-import BrainGame.GUI.Controllers.NewConnectionDialogController;
+import BrainGame.GUI.Controllers.ConnectionDialogController;
 import BrainGame.handlers.ConnectDialogHandler;
 import BrainGame.handlers.ModeHandler;
 import BrainGame.tools.AlreadyConnectedException;
@@ -157,10 +157,14 @@ public class BrainCanvas {
                 graphics.setTextAlign(TextAlignment.CENTER);
                 graphics.setTextBaseline(VPos.CENTER);
                 graphics.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 23));
-                if (currentMode == EditMode.MOVE && canContinueAction && i == startCircle)
-                    graphics.setStroke(Color.GREEN);
-                if(currentMode == EditMode.DISCONNECT && canContinueAction && i == startCircle)
-                    graphics.setStroke(Color.RED);
+                if(canContinueAction && i == startCircle) {
+                    if (currentMode == EditMode.MOVE)
+                        graphics.setStroke(Color.GREEN);
+                    if(currentMode == EditMode.DISCONNECT)
+                        graphics.setStroke(Color.RED);
+                    if(currentMode == EditMode.EDIT)
+                        graphics.setStroke(Color.DIMGRAY);
+                }
                 graphics.strokeOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
                 graphics.setFill(Color.BLUE);
                 graphics.fillText("" + counter++, circle.getX(), circle.getY());
@@ -212,12 +216,10 @@ public class BrainCanvas {
                                 alertdialog.setHeaderText("Oops, you cannot add connection on top of another. Use edit connection");
                                 alertdialog.setContentText("Cannot connect these two nodes");
                                 alertdialog.showAndWait();
-                            } finally {
-                                start = end = null;
-                                startCircle = endCircle = -1;
                             }
                         });
-
+                        start = end = null;
+                        startCircle = endCircle = -1;
                     } else
                         start = end = null;
                 }
@@ -230,10 +232,10 @@ public class BrainCanvas {
         Parent parent;
         try {
             parent = loader.load();
-            NewConnectionDialogController controller = loader.getController();
+            ConnectionDialogController controller = loader.getController();
             controller.addHandler(handler);
 
-            Scene scene = new Scene(parent, 400, 200);
+            Scene scene = new Scene(parent, 500, 200);
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
@@ -307,8 +309,55 @@ public class BrainCanvas {
         }
     }
 
-    //TODO: implement this
     private void editConnectionHandler(double x, double y, ClickMode mode) {
+        int node;
+        switch (mode) {
+            case START:
+                if ((node = getIntersection(x, y)) != -1) {
+                    // this is the end node
+                    if (canContinueAction) {
+                        endCircle = node;
+                    } else {
+                        // first node
+                        startCircle = node;
+                    }
+                }
+                break;
+            case DURING:
+                break;
+            case END:
+                // now is the end node
+                if (canContinueAction) {
+                    canContinueAction = false;
+                    if(startCircle == endCircle) {
+                        return;
+                    }
+                    if(brain.checkConnection(startCircle, endCircle)) {
+                            connectPopup(pair -> {
+                                if(pair.getTime() > 0 && pair.getTime() > 0) {
+                                    try {
+                                        brain.editConnection(startCircle, endCircle, pair.getDistance(), pair.getTime());
+                                    } catch (NoConnectionException e) {
+                                        Alert alertdialog = new Alert(Alert.AlertType.ERROR);
+                                        alertdialog.setTitle("Edition Error");
+                                        alertdialog.setHeaderText("Oops, you cannot edit a non connected nodes. Please add connection.");
+                                        alertdialog.setContentText("Cannot edit connection between these two nodes");
+                                        alertdialog.showAndWait();
+                                    }
+                                }
+                            });
+                    } else {
+                        Alert alertdialog = new Alert(Alert.AlertType.ERROR);
+                        alertdialog.setTitle("Edition Error");
+                        alertdialog.setHeaderText("Oops, you cannot edit a non connected nodes. Please add connection.");
+                        alertdialog.setContentText("Cannot edit connection between these two nodes");
+                        alertdialog.showAndWait();
+                    }
+                } else {
+                    // start node end selection
+                    canContinueAction = true;
+                }
+        }
     }
 
     private void initGameLoop() {

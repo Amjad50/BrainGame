@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class NewConnectionDialogController {
+public class ConnectionDialogController {
     @FXML
     private TextField time;
     @FXML
