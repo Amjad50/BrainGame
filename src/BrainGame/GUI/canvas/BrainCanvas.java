@@ -138,25 +138,26 @@ public class BrainCanvas {
     }
 
     // draw to the canvas
-    // TODO: rearrange code, to make it better.
     private void render() {
         graphics.save();
 
+        // set stroke width and line width to 5
         graphics.setLineWidth(5);
-        if (currentMode == EditMode.CONNECT)
-            if (start != null && end != null)
-                graphics.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
 
+        // check if there are any nodes to draw
         if (circles != null) {
+            // draw the connection lines first (to be on bottom)
             graphics.setStroke(Color.BLUE);
             for (Point2D connection : connections) {
                 graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
                         circles[(int) connection.getY()].getX(), circles[(int) connection.getY()].getY());
             }
 
+            // if we are in SEND mode and there is a path, draw it
             if (currentMode == EditMode.SEND && !correctConnections.isEmpty()) {
                 graphics.setStroke(Color.RED);
                 graphics.save();
+                // make it thicker to go over the lines on the bottom
                 graphics.setLineWidth(6);
                 for (Point2D connection : correctConnections)
                     graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
@@ -164,15 +165,24 @@ public class BrainCanvas {
                 graphics.restore();
             }
 
+            // if we are currently drawing lines, show them
+            if (currentMode == EditMode.CONNECT)
+                if (start != null && end != null)
+                    graphics.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
+
+            // start drawing nodes circles
             int counter = 0;
             for (int i = 0; i < circles.length; i++) {
+                // get the circle to draw now
                 Point2D circle = circles[i];
+
+                // set the body color and draw
                 graphics.setFill(Color.ORANGE);
                 graphics.fillOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
+
+                // set the color of the outer stroke (based on the mode)
+                // default color:
                 graphics.setStroke(Color.BLUE);
-                graphics.setTextAlign(TextAlignment.CENTER);
-                graphics.setTextBaseline(VPos.CENTER);
-                graphics.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 23));
                 if (canContinueAction && i == startCircle) {
                     if (currentMode == EditMode.MOVE)
                         graphics.setStroke(Color.GREEN);
@@ -184,6 +194,11 @@ public class BrainCanvas {
                         graphics.setStroke(Color.HOTPINK);
                 }
                 graphics.strokeOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
+
+                // set stroke color(color of text also) and text settings to draw the number of the node
+                graphics.setTextAlign(TextAlignment.CENTER);
+                graphics.setTextBaseline(VPos.CENTER);
+                graphics.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 23));
                 graphics.setFill(Color.BLUE);
                 graphics.fillText("" + counter++, circle.getX(), circle.getY());
             }
