@@ -55,7 +55,6 @@ public class MainSceneController {
         stage.showAndWait();
     }
 
-    // TODO: better implementation
     private void newBrainHandler(NewDialogHandler.Result result) {
         brainCanvas.newBrain(result.getNumberOfNodes());
     }
