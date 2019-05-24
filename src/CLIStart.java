@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 import BrainGame.Brain;
 import BrainGame.Path;
@@ -11,10 +6,6 @@ import BrainGame.tools.AlreadyConnectedException;
 import BrainGame.tools.NoConnectionException;
 import java.util.Scanner;
 
-/**
- *
- * @author alvin
- */
 public class CLIStart {
 
     public static void main(String[] args) throws AlreadyConnectedException, NoConnectionException {
@@ -26,13 +17,13 @@ public class CLIStart {
         int dest = 0;
         boolean edit = false;
 
-        while (source != -1 || dest!=-1) {
+        while (source != -1 || dest != -1) {
             System.out.print("Enter the node you want to connect, along with the destenation and the distance & time to get there(press -1 to quit)");
             source = s.nextInt();
             if (source == -1) {
                 break;
             }
-            if(source < 0) {
+            if (source < 0) {
                 System.out.println("Entered number is too small");
                 continue;
             }
@@ -41,10 +32,10 @@ public class CLIStart {
                 continue;
             }
             dest = s.nextInt();
-             if (dest == -1) {
+            if (dest == -1) {
                 break;
             }
-            if(dest < 0) {
+            if (dest < 0) {
                 System.out.println("Entered number is too small");
                 continue;
             }
@@ -78,13 +69,13 @@ public class CLIStart {
         System.out.println("Now you can know the distance and time of the best path between two nodes.");
         source = 0;
         dest = 0;
-        while (source != -1 || dest!=-1) {
+        while (source != -1 || dest != -1) {
             System.out.print("Enter the source node and destination ");
             source = s.nextInt();
             if (source == -1) {
                 break;
             }
-            if(source < 0) {
+            if (source < 0) {
                 System.out.println("Entered number is too small");
                 continue;
             }
@@ -93,10 +84,10 @@ public class CLIStart {
                 continue;
             }
             dest = s.nextInt();
-             if (dest == -1) {
+            if (dest == -1) {
                 break;
             }
-            if(dest < 0) {
+            if (dest < 0) {
                 System.out.println("Entered number is too small");
                 continue;
             }
@@ -107,9 +98,9 @@ public class CLIStart {
             Path path = Search.search(b, source, dest);
 
             System.out.printf("The shortest path will take %d seconds, and its total distance is %s\n", path.getTime(), path.getDistance());
-            if(path.getPath().size() == 0){
+            if (path.getPath().size() == 0) {
                 System.out.printf("There is not path to get from %d to %d\n", source, dest);
-            }else {
+            } else {
                 System.out.println("The path from start to end is: ");
                 for (Brain.Neuron neuron : path.getPath()) {
                     System.out.print(neuron.id + " ");
