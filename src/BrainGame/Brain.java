@@ -4,6 +4,7 @@ import BrainGame.tools.AlreadyConnectedException;
 import BrainGame.tools.NoConnectionException;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Brain {
 
@@ -52,7 +53,7 @@ public class Brain {
     }
 
     public Neuron getNeuron(int id) {
-        // TODO: add logic to check for boundaries.
+        Objects.checkIndex(id, nodes.length);
         return nodes[id];
     }
 
