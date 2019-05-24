@@ -4,7 +4,6 @@ import BrainGame.tools.AlreadyConnectedException;
 import BrainGame.tools.NoConnectionException;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class Brain {
 

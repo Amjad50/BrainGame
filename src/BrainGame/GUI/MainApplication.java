@@ -24,7 +24,7 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         stage.setTitle("Brain Game Simulator");
         stage.sizeToScene();
-        //Icon to be changed
+        //Icon to be changed later
         stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/tmp.jpg")));
         stage.show();
 

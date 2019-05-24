@@ -19,11 +19,11 @@
         <VBox alignment="CENTER">
             <HBox alignment="CENTER" prefHeight="0" spacing="30.0">
                 <Text text="The distance between of the connection" />
-                <TextField fx:id="distance" promptText="nanometers" />
+                <TextField fx:id="distance" promptText="Distance?" />
             </HBox>
             <HBox alignment="CENTER" prefHeight="0" spacing="30.0">
                 <Text text="The time to go through the connection" />
-                <TextField fx:id="time" promptText="nanoseconds" />
+                <TextField fx:id="time" promptText="Time?" />
             </HBox>
         </VBox>
     </center>
