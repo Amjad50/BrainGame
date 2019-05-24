@@ -2,6 +2,8 @@ package BrainGame.GUI.canvas;
 
 import BrainGame.Brain;
 import BrainGame.GUI.Controllers.ConnectionDialogController;
+import BrainGame.Path;
+import BrainGame.Search;
 import BrainGame.handlers.ConnectDialogHandler;
 import BrainGame.handlers.ModeHandler;
 import BrainGame.tools.AlreadyConnectedException;
@@ -42,6 +44,7 @@ public class BrainCanvas {
 
     private Point2D[] circles = null;
     private ArrayList<Point2D> connections;
+    private ArrayList<Point2D> correctConnections;
 
     //used to indicate that we can draw or move or delete (any action)
     private boolean canContinueAction = false;
@@ -63,6 +66,7 @@ public class BrainCanvas {
         graphics = mainCanvas.getGraphicsContext2D();
 
         connections = new ArrayList<>();
+        correctConnections = new ArrayList<>();
 
         initClickListeners();
         initGameLoop();
@@ -76,6 +80,7 @@ public class BrainCanvas {
         handlersMap.put(EditMode.CONNECT, this::connectHandler);
         handlersMap.put(EditMode.DISCONNECT, this::disconnectHandler);
         handlersMap.put(EditMode.EDIT, this::editConnectionHandler);
+        handlersMap.put(EditMode.SEND, this::sendMessageHandler);
         handlersMap.put(EditMode.NOTHING, (x, y, mode) -> {
         });
         editHandler = (x, y, mode) -> {
@@ -133,6 +138,7 @@ public class BrainCanvas {
     }
 
     // draw to the canvas
+    // TODO: rearrange code, to make it better.
     private void render() {
         graphics.save();
 
@@ -146,6 +152,16 @@ public class BrainCanvas {
             for (Point2D connection : connections) {
                 graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
                         circles[(int) connection.getY()].getX(), circles[(int) connection.getY()].getY());
+            }
+
+            if (currentMode == EditMode.SEND && !correctConnections.isEmpty()) {
+                graphics.setStroke(Color.RED);
+                graphics.save();
+                graphics.setLineWidth(6);
+                for (Point2D connection : correctConnections)
+                    graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
+                            circles[(int) connection.getY()].getX(), circles[(int) connection.getY()].getY());
+                graphics.restore();
             }
 
             int counter = 0;
@@ -164,6 +180,8 @@ public class BrainCanvas {
                         graphics.setStroke(Color.RED);
                     if (currentMode == EditMode.EDIT)
                         graphics.setStroke(Color.DIMGRAY);
+                    if(currentMode == EditMode.SEND)
+                        graphics.setStroke(Color.HOTPINK);
                 }
                 graphics.strokeOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
                 graphics.setFill(Color.BLUE);
@@ -204,8 +222,7 @@ public class BrainCanvas {
                                     if (pair.getTime() > 0 && pair.getDistance() > 0) {
                                         brain.connect(startCircle, endCircle, pair.getDistance(), pair.getTime());
                                         connections.add(new Point2D(startCircle, endCircle));
-                                    }
-                                    else {
+                                    } else {
                                         Alert alertdialog = new Alert(Alert.AlertType.ERROR);
                                         alertdialog.setTitle("Connection Error");
                                         alertdialog.setHeaderText("Oops, you cannot create a connection with non or negative values");
@@ -358,6 +375,47 @@ public class BrainCanvas {
                 } else {
                     // start node end selection
                     canContinueAction = true;
+                }
+        }
+    }
+
+    private void sendMessageHandler(double x, double y, ClickMode mode) {
+        int node;
+        switch (mode) {
+            case START:
+                if ((node = getIntersection(x, y)) != -1) {
+                    // this is the end node
+                    if (canContinueAction) {
+                        endCircle = node;
+                    } else {
+                        // first node
+                        startCircle = node;
+                    }
+                }
+                break;
+            case DURING:
+                break;
+            case END:
+                //TODO: check if the target is node (also with other methods)
+
+                // now is the end node
+                if (canContinueAction) {
+                    canContinueAction = false;
+                    if (startCircle == endCircle) {
+                        return;
+                    }
+                    Path path = Search.search(brain, startCircle, endCircle);
+                    Brain.Neuron prev = null;
+                    for (Brain.Neuron n : path.getPath()) {
+                        if (prev != null) {
+                            correctConnections.add(new Point2D(prev.id, n.id));
+                        }
+                        prev = n;
+                    }
+                } else {
+                    // start node end selection
+                    canContinueAction = true;
+                    correctConnections.clear();
                 }
         }
     }

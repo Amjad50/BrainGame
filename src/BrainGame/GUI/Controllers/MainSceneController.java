@@ -2,7 +2,6 @@ package BrainGame.GUI.Controllers;
 
 import BrainGame.GUI.canvas.BrainCanvas;
 import BrainGame.handlers.NewDialogHandler;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,6 +27,7 @@ public class MainSceneController {
         brainCanvas = new BrainCanvas(canvasContainer);
         brainCanvas.startGraphicsLoop();
         initToolBarListener();
+        brainCanvas.newBrain(8);
     }
 
     private void initToolBarListener() {
@@ -57,10 +57,5 @@ public class MainSceneController {
 
     private void newBrainHandler(NewDialogHandler.Result result) {
         brainCanvas.newBrain(result.getNumberOfNodes());
-    }
-
-    // TODO: add implementation
-    @FXML
-    private void sendMessages(ActionEvent actionEvent) {
     }
 }

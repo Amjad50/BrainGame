@@ -5,5 +5,6 @@ public enum EditMode {
     DISCONNECT,
     MOVE,
     EDIT,
+    SEND,
     NOTHING
 }

@@ -7,7 +7,6 @@
         <VBox>
             <HBox prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
                 <Button onAction="#showNewBrainDialog" text="new" />
-                <Button onAction="#sendMessages" text="send messages" />
                 <padding>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </padding>
@@ -20,6 +19,7 @@
                 <ToggleButton text="add connection" toggleGroup="$toolsGroup" userData="CONNECT" />
                 <ToggleButton text="remove connection" toggleGroup="$toolsGroup" userData="DISCONNECT" />
                 <ToggleButton text="edit connection" toggleGroup="$toolsGroup" userData="EDIT" />
+                <ToggleButton text="send message" toggleGroup="$toolsGroup" userData="SEND" />
             </ToolBar>
         </VBox>
 
