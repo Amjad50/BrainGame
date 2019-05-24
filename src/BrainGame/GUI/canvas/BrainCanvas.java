@@ -2,6 +2,7 @@ package BrainGame.GUI.canvas;
 
 import BrainGame.Brain;
 import BrainGame.GUI.Controllers.ConnectionDialogController;
+import BrainGame.GUI.MainApplication;
 import BrainGame.Path;
 import BrainGame.Search;
 import BrainGame.handlers.ConnectDialogHandler;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import javafx.scene.image.Image;
 
 public class BrainCanvas {
 
@@ -54,7 +56,6 @@ public class BrainCanvas {
     private HashMap<EditMode, ModeHandler> handlersMap;
     private ModeHandler editHandler;
     private EditMode currentMode;
-
 
     public BrainCanvas(Pane container) {
         // dangerous code (VERY)
@@ -97,8 +98,9 @@ public class BrainCanvas {
     private int getIntersection(double x, double y) {
         if (circles != null) {
             for (int i = 0; i < circles.length; i++) {
-                if (circles[i].distance(x, y) < nodeRadius)
+                if (circles[i].distance(x, y) < nodeRadius) {
                     return i;
+                }
             }
         }
         return -1;
@@ -108,8 +110,9 @@ public class BrainCanvas {
         if (circles != null) {
             for (Point2D circle : circles) {
                 try {
-                    if (circle.distance(x, y) < nodeRadius * 2)
+                    if (circle.distance(x, y) < nodeRadius * 2) {
                         return true;
+                    }
                 } catch (NullPointerException e) {
                     return false;
                 }
@@ -117,7 +120,6 @@ public class BrainCanvas {
         }
         return false;
     }
-
 
     // prepare objects to be drawn on the canvas
     private void update() {
@@ -147,7 +149,7 @@ public class BrainCanvas {
         // check if there are any nodes to draw
         if (circles != null) {
             // draw the connection lines first (to be on bottom)
-            graphics.setStroke(Color.BLUE);
+            graphics.setStroke(Color.rgb(35, 4, 89, 0.45));
             for (Point2D connection : connections) {
                 graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
                         circles[(int) connection.getY()].getX(), circles[(int) connection.getY()].getY());
@@ -155,20 +157,23 @@ public class BrainCanvas {
 
             // if we are in SEND mode and there is a path, draw it
             if (currentMode == EditMode.SEND && !correctConnections.isEmpty()) {
-                graphics.setStroke(Color.RED);
+                graphics.setStroke(Color.AZURE);
                 graphics.save();
                 // make it thicker to go over the lines on the bottom
                 graphics.setLineWidth(6);
-                for (Point2D connection : correctConnections)
+                for (Point2D connection : correctConnections) {
                     graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
                             circles[(int) connection.getY()].getX(), circles[(int) connection.getY()].getY());
+                }
                 graphics.restore();
             }
 
             // if we are currently drawing lines, show them
-            if (currentMode == EditMode.CONNECT)
-                if (start != null && end != null)
+            if (currentMode == EditMode.CONNECT) {
+                if (start != null && end != null) {
                     graphics.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
+                }
+            }
 
             // start drawing nodes circles
             int counter = 0;
@@ -176,22 +181,26 @@ public class BrainCanvas {
                 // get the circle to draw now
                 Point2D circle = circles[i];
 
-                // set the body color and draw
-                graphics.setFill(Color.ORANGE);
+                // set the insde body color and draw
+                graphics.setFill(Color.rgb(65, 61, 208, 0.8));
                 graphics.fillOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
 
                 // set the color of the outer stroke (based on the mode)
                 // default color:
-                graphics.setStroke(Color.BLUE);
+                graphics.setStroke(Color.rgb(42, 37, 178, 0.2));
                 if (canContinueAction && i == startCircle) {
-                    if (currentMode == EditMode.MOVE)
-                        graphics.setStroke(Color.GREEN);
-                    if (currentMode == EditMode.DISCONNECT)
-                        graphics.setStroke(Color.RED);
-                    if (currentMode == EditMode.EDIT)
-                        graphics.setStroke(Color.DIMGRAY);
-                    if(currentMode == EditMode.SEND)
-                        graphics.setStroke(Color.HOTPINK);
+                    if (currentMode == EditMode.MOVE) {
+                        graphics.setStroke(Color.rgb(29, 5, 5, 0.5));
+                    }
+                    if (currentMode == EditMode.DISCONNECT) {
+                        graphics.setStroke(Color.rgb(137, 6, 6, 0.65));
+                    }
+                    if (currentMode == EditMode.EDIT) {
+                        graphics.setStroke(Color.rgb(33, 96, 35, 0.65));
+                    }
+                    if (currentMode == EditMode.SEND) {
+                        graphics.setStroke(Color.rgb(171, 160, 181));
+                    }
                 }
                 graphics.strokeOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
 
@@ -199,7 +208,7 @@ public class BrainCanvas {
                 graphics.setTextAlign(TextAlignment.CENTER);
                 graphics.setTextBaseline(VPos.CENTER);
                 graphics.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 23));
-                graphics.setFill(Color.BLUE);
+                graphics.setFill(Color.rgb(245, 245, 245, 0.85));
                 graphics.fillText("" + counter++, circle.getX(), circle.getY());
             }
         }
@@ -231,7 +240,7 @@ public class BrainCanvas {
                     if (node != -1) {
                         end = circles[node];
                         endCircle = node;
-                        if (endCircle != startCircle)
+                        if (endCircle != startCircle) {
                             connectPopup(pair -> {
                                 try {
                                     if (pair.getTime() > 0 && pair.getDistance() > 0) {
@@ -252,10 +261,12 @@ public class BrainCanvas {
                                     alertdialog.showAndWait();
                                 }
                             });
+                        }
                         start = end = null;
                         startCircle = endCircle = -1;
-                    } else
+                    } else {
                         start = end = null;
+                    }
                 }
 
         }
@@ -274,7 +285,10 @@ public class BrainCanvas {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.setTitle("Connect");
+            //Icon to be edited
+            stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/tmp.jpg")));
             stage.showAndWait();
+
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -443,7 +457,7 @@ public class BrainCanvas {
             private void realHandler(long now) {
 
                 graphics.save();
-                graphics.setFill(Color.AZURE);
+                graphics.setFill(Color.rgb(97, 96, 99, .8));
 
                 graphics.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
                 // FPS

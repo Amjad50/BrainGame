@@ -1,5 +1,6 @@
 package BrainGame.GUI.Controllers;
 
+import BrainGame.GUI.MainApplication;
 import BrainGame.GUI.canvas.BrainCanvas;
 import BrainGame.handlers.NewDialogHandler;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.scene.image.Image;
 
 public class MainSceneController {
 
@@ -52,6 +54,8 @@ public class MainSceneController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.setTitle("New");
+        //Icon to be changed
+        stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/tmp.jpg")));
         stage.showAndWait();
     }
 

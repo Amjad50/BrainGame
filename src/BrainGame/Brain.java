@@ -26,19 +26,22 @@ public class Brain {
      * @param distention from 1 to N (size)
      * @param distance   distance of the connection
      * @param time       time takes to travel along the path to that connection
-     * @throws AlreadyConnectedException if the same connection is already present, even if other numbers
-     *                                   check {@link #editConnection} to edit the values of your connection.
+     * @throws AlreadyConnectedException if the same connection is already
+     *                                   present, even if other numbers check {@link #editConnection} to edit the
+     *                                   values of your connection.
      */
     public void connect(int source, int distention, int distance, int time) throws AlreadyConnectedException {
-        if (nodes[source].hasConnection(nodes[distention]))
+        if (nodes[source].hasConnection(nodes[distention])) {
             throw new AlreadyConnectedException(source, distention);
+        }
 
         nodes[source].addConnection(nodes[distention], distance, time);
     }
 
     public void editConnection(int source, int distention, int distance, int time) throws NoConnectionException {
-        if (!nodes[source].hasConnection(nodes[distention]))
+        if (!nodes[source].hasConnection(nodes[distention])) {
             throw new NoConnectionException(source, distention);
+        }
 
         nodes[source].children.replace(nodes[distention], new DistanceTimePair(distance, time));
     }
@@ -48,8 +51,9 @@ public class Brain {
     }
 
     public void removeConnection(int source, int distention) throws NoConnectionException {
-        if (!checkConnection(source, distention))
+        if (!checkConnection(source, distention)) {
             throw new NoConnectionException(source, distention);
+        }
 
         nodes[source].removeConnection(nodes[distention]);
     }
@@ -59,7 +63,7 @@ public class Brain {
     }
 
     public Neuron getNeuron(int id) {
-        Objects.checkIndex(id, nodes.length);
+
         return nodes[id];
     }
 
@@ -68,6 +72,7 @@ public class Brain {
     }
 
     public class Neuron {
+
         public int id;
         public HashMap<Neuron, DistanceTimePair> children = new HashMap<>();
 

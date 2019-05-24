@@ -1,5 +1,6 @@
 package BrainGame.GUI;
 
+import BrainGame.GUI.canvas.BrainCanvas;
 import com.sun.javafx.application.PlatformImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -9,8 +10,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.scene.image.Image;
 
 public class MainApplication extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -21,9 +24,11 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         stage.setTitle("Brain Game Simulator");
         stage.sizeToScene();
+        //Icon to be changed
+        stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/tmp.jpg")));
         stage.show();
-    }
 
+    }
 
     public void run() {
         PlatformImpl.startup(() -> {
