@@ -44,6 +44,7 @@ public class BrainCanvas {
     private AnimationTimer gameloop;
     private Canvas mainCanvas;
     private GraphicsContext graphics;
+    private boolean Darkmode = false;
 
     private int n_neurons;
 
@@ -153,7 +154,11 @@ public class BrainCanvas {
         // check if there are any nodes to draw
         if (circles != null) {
             // draw the connection lines first (to be on bottom)
-            graphics.setStroke(Color.rgb(42, 37, 178, 0.60));
+            if (Darkmode) {
+                graphics.setStroke(Color.rgb(117, 56, 101));
+            } else {
+                graphics.setStroke(Color.rgb(1, 0, 0, 0.88));
+            }
             for (Point2D connection : connections) {
                 Point2D first = circles[(int) connection.getX()],
                         second = circles[(int) connection.getY()];
@@ -165,15 +170,24 @@ public class BrainCanvas {
                 graphics.save();
 
                 // draw the time and distance info
-                graphics.setFill(Color.AZURE);
-                graphics.setFont(Font.font(null, FontWeight.BOLD, 17));
+                if (Darkmode) {
+                    graphics.setFill(Color.rgb(176, 105, 11));
+                } else {
+                    graphics.setFill(Color.rgb(12, 2, 1, 0.8));
+                }
+
+                graphics.setFont(Font.font("Tahoma", FontWeight.LIGHT, 16));
                 graphics.setTextBaseline(VPos.TOP);
                 if (best != null) {
-                    String s = String.format("Best Path: [Distance] = %s, [Time] = %s, using %d paths", best.getDistance(), best.getTime(), correctConnections.size());
+                    String s = String.format("Best Path: Distance = %s, Time = %s, using %d path(s)", best.getDistance(), best.getTime(), correctConnections.size());
                     graphics.fillText(s, nodeRadius / 2, nodeRadius / 2);
                 }
 
-                graphics.setStroke(Color.AZURE);
+                if (Darkmode) {
+                    graphics.setStroke(Color.AZURE);
+                } else {
+                    graphics.setStroke(Color.BURLYWOOD);
+                }
                 // make it thicker to go over the lines on the bottom
                 graphics.setLineWidth(6);
                 for (Point2D connection : correctConnections) {
@@ -202,10 +216,14 @@ public class BrainCanvas {
                 Point2D midpoint = first.midpoint(second);
 
                 // draw
-                graphics.setTextBaseline(VPos.TOP);
+                graphics.setTextBaseline(VPos.BOTTOM);
                 graphics.setTextAlign(TextAlignment.CENTER);
-                graphics.setFill(Color.rgb(225, 235, 255));
-                graphics.setFont(Font.font(null, FontWeight.BOLD, 17));
+                if (Darkmode) {
+                    graphics.setFill(Color.rgb(191, 187, 190));
+                } else {
+                    graphics.setFill(Color.rgb(1, 0, 0, 0.7));
+                }
+                graphics.setFont(Font.font("Arial", FontWeight.BOLD, 18));
                 graphics.fillText(String.format(DistanceTimeFormat, pair.getDistance(), pair.getTime()), midpoint.getX(), midpoint.getY());
             }
 
@@ -216,12 +234,23 @@ public class BrainCanvas {
                 Point2D circle = circles[i];
 
                 // set the insde body color and draw
-                graphics.setFill(Color.rgb(84, 175, 71, 0.6));
+                if (Darkmode) {
+                    graphics.setFill(Color.rgb(238, 159, 46));
+                } else {
+                    graphics.setFill(Color.rgb(220, 168, 53, 0.75));
+                }
+
                 graphics.fillOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
 
                 // set the color of the outer stroke (based on the mode)
                 // default color:
-                graphics.setStroke(Color.rgb(42, 37, 178, 0.60));
+                if (Darkmode) {
+                    graphics.setStroke(Color.rgb(238, 159, 46));
+
+                } else {
+                    graphics.setStroke(Color.rgb(220, 168, 53, 0.85));
+                }
+
                 if (canContinueAction && i == startCircle) {
                     if (currentMode == EditMode.MOVE) {
                         graphics.setStroke(Color.rgb(29, 5, 5));
@@ -242,7 +271,7 @@ public class BrainCanvas {
                 graphics.setTextAlign(TextAlignment.CENTER);
                 graphics.setTextBaseline(VPos.CENTER);
                 graphics.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 23));
-                graphics.setFill(Color.rgb(245, 245, 245));
+                graphics.setFill(Color.rgb(1, 0, 0, 0.65));
                 graphics.fillText("" + counter++, circle.getX(), circle.getY());
             }
         }
@@ -490,7 +519,11 @@ public class BrainCanvas {
             private void realHandler(long now) {
 
                 graphics.save();
-                graphics.setFill(Color.rgb(169, 169, 169, 0.90));
+                if (Darkmode) {
+                    graphics.setFill(Color.rgb(45, 45, 45, 0.8));
+                } else {
+                    graphics.setFill(Color.rgb(247, 246, 246));
+                }
 
                 graphics.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
                 // FPS
@@ -502,9 +535,14 @@ public class BrainCanvas {
                 render();
 
                 graphics.save();
-                graphics.setFont(Font.font(null, FontWeight.BOLD, 14));
-                graphics.setFill(Color.rgb(225, 235, 255));
-                graphics.fillText(String.format("format: " + DistanceTimeFormat, "distance", "time"), nodeRadius / 2, mainCanvas.getHeight() - nodeRadius / 2);
+                graphics.setFont(new Font("Arial", 12));
+                if (Darkmode) {
+                    graphics.setFill(Color.rgb(191, 187, 190));
+                } else {
+                    graphics.setFill(Color.CADETBLUE);
+                }
+
+                graphics.fillText(String.format("Format: " + DistanceTimeFormat, "Distance", "Time"), nodeRadius / 2, mainCanvas.getHeight() - nodeRadius / 2);
                 graphics.restore();
 
                 past = now;
@@ -547,4 +585,13 @@ public class BrainCanvas {
         startCircle = endCircle = -1;
         canContinueAction = false;
     }
+
+    public void changedisplay(boolean changemode) {
+        if (changemode) {
+            Darkmode = true;
+        } else {
+            Darkmode = false;
+        }
+    }
+
 }

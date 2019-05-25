@@ -70,9 +70,9 @@ public class MainSceneController {
     @FXML
     private void ChangeDisplayMode(){
         if(DisplayMode.isSelected()){
-            System.out.println("am checked");  
+            brainCanvas.changedisplay(true);
         }else{
-            System.out.println("am not");
+            brainCanvas.changedisplay(false);
         }
     }
 }
