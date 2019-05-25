@@ -37,7 +37,7 @@ public class ConnectionDialogController {
             String distanceS = distance.getCharacters().toString();
 
             try {
-                handler.handle(new DistanceTimePair(Integer.parseInt(timeS), Integer.parseInt(distanceS)));
+                handler.handle(new DistanceTimePair(Integer.parseInt(distanceS), Integer.parseInt(timeS)));
             } catch (NumberFormatException e) {
                 Logger.getAnonymousLogger().log(Level.SEVERE, "Could not convert to integer", e);
                 handler.handle(new DistanceTimePair(-1, -1));

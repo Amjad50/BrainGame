@@ -1,6 +1,7 @@
 package BrainGame.GUI.canvas;
 
 import BrainGame.Brain;
+import BrainGame.DistanceTimePair;
 import BrainGame.GUI.Controllers.ConnectionDialogController;
 import BrainGame.GUI.MainApplication;
 import BrainGame.Path;
@@ -38,6 +39,7 @@ public class BrainCanvas {
     private Brain brain;
 
     private static final double nodeRadius = 25;
+    private static final String distanceTimeFormat = "%s/%s";
 
     private AnimationTimer gameloop;
     private Canvas mainCanvas;
@@ -152,8 +154,9 @@ public class BrainCanvas {
             // draw the connection lines first (to be on bottom)
             graphics.setStroke(Color.rgb(42, 37, 178, 0.60));
             for (Point2D connection : connections) {
-                graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
-                        circles[(int) connection.getY()].getX(), circles[(int) connection.getY()].getY());
+                Point2D first = circles[(int) connection.getX()],
+                        second = circles[(int) connection.getY()];
+                graphics.strokeLine(first.getX(), first.getY(), second.getX(), second.getY());
             }
 
             // if we are in SEND mode and there is a path, draw it
@@ -163,8 +166,9 @@ public class BrainCanvas {
                 // make it thicker to go over the lines on the bottom
                 graphics.setLineWidth(6);
                 for (Point2D connection : correctConnections) {
-                    graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
-                            circles[(int) connection.getY()].getX(), circles[(int) connection.getY()].getY());
+                    Point2D first = circles[(int) connection.getX()],
+                            second = circles[(int) connection.getY()];
+                    graphics.strokeLine(first.getX(), first.getY(), second.getX(), second.getY());
                 }
                 graphics.restore();
             }
@@ -174,6 +178,24 @@ public class BrainCanvas {
                 if (start != null && end != null) {
                     graphics.strokeLine(start.getX(), start.getY(), end.getX(), end.getY());
                 }
+            }
+
+            // draw the distance and time information
+            for (Point2D connection : connections) {
+                // get info
+                int firstI = (int) connection.getX(),
+                        secondI = (int) connection.getY();
+                Point2D first = circles[firstI],
+                        second = circles[secondI];
+                DistanceTimePair pair = brain.getNeuron(firstI).children.get(brain.getNeuron(secondI));
+                Point2D midpoint = first.midpoint(second);
+
+                // draw
+                graphics.setTextBaseline(VPos.CENTER);
+                graphics.setTextAlign(TextAlignment.LEFT);
+                graphics.setFill(Color.WHEAT);
+                graphics.setFont(Font.font(18));
+                graphics.fillText(String.format(distanceTimeFormat, pair.getDistance(), pair.getTime()), midpoint.getX(), midpoint.getY());
             }
 
             // start drawing nodes circles
@@ -466,6 +488,12 @@ public class BrainCanvas {
 
                 update();
                 render();
+
+                graphics.save();
+                graphics.setFont(Font.font(null, FontWeight.BOLD, 16));
+                graphics.setFill(Color.WHEAT);
+                graphics.fillText(String.format("format: " + distanceTimeFormat, "distance", "time"), nodeRadius / 2, mainCanvas.getHeight() - nodeRadius / 2);
+                graphics.restore();
 
                 past = now;
             }
