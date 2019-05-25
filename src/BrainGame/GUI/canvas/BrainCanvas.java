@@ -528,6 +528,11 @@ public class BrainCanvas {
         n_neurons = numberOfNodes;
         brain = new Brain(n_neurons);
         circles = null;
+        correctConnections.clear();
+        connections.clear();
+        startCircle = endCircle = -1;
+        start = end = null;
+        canContinueAction = false;
     }
 
     public void changeMode(String name) {
