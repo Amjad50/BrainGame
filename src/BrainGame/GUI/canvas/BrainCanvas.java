@@ -35,18 +35,18 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class BrainCanvas {
-    
+
     private Brain brain;
-    
+
     private static final double nodeRadius = 25;
     private static final String DistanceTimeFormat = "%s, %s";
-    
+
     private AnimationTimer gameloop;
     private Canvas mainCanvas;
     private GraphicsContext graphics;
-    
+
     private int n_neurons;
-    
+
     private Point2D[] circles = null;
     private ArrayList<Point2D> connections;
     private ArrayList<Point2D> correctConnections;
@@ -56,31 +56,31 @@ public class BrainCanvas {
     private boolean canContinueAction = false;
     private Point2D start, end;
     private int startCircle, endCircle;
-    
+
     private HashMap<EditMode, ModeHandler> handlersMap;
     private ModeHandler editHandler;
     private EditMode currentMode;
-    
+
     public BrainCanvas(Pane container) {
         // dangerous code (VERY)
         mainCanvas = (Canvas) container.getChildren().get(0);
-        
+
         mainCanvas.widthProperty().bind(container.widthProperty());
         mainCanvas.heightProperty().bind(container.heightProperty());
-        
+
         graphics = mainCanvas.getGraphicsContext2D();
-        
+
         connections = new ArrayList<>();
         correctConnections = new ArrayList<>();
-        
+
         initClickListeners();
         initGameLoop();
         initModeHandlers();
     }
-    
+
     private void initModeHandlers() {
         handlersMap = new HashMap<>();
-        
+
         handlersMap.put(EditMode.MOVE, this::moveHandler);
         handlersMap.put(EditMode.CONNECT, this::connectHandler);
         handlersMap.put(EditMode.DISCONNECT, this::disconnectHandler);
@@ -91,14 +91,14 @@ public class BrainCanvas {
         editHandler = (x, y, mode) -> {
         };
     }
-    
+
     private void initClickListeners() {
         mainCanvas.setOnMousePressed(event -> editHandler.handle(event.getX(), event.getY(), ClickMode.START));
         mainCanvas.setOnMouseDragged(event -> editHandler.handle(event.getX(), event.getY(), ClickMode.DURING));
         mainCanvas.setOnMouseReleased(event -> editHandler.handle(event.getX(), event.getY(), ClickMode.END));
-        
+
     }
-    
+
     private int getIntersection(double x, double y) {
         if (circles != null) {
             for (int i = 0; i < circles.length; i++) {
@@ -109,7 +109,7 @@ public class BrainCanvas {
         }
         return -1;
     }
-    
+
     private boolean isOverLap(double x, double y) {
         if (circles != null) {
             for (Point2D circle : circles) {
@@ -137,7 +137,7 @@ public class BrainCanvas {
                     x = rand.nextInt((int) mainCanvas.getWidth() - (int) nodeRadius * 4) + nodeRadius * 2;
                     y = rand.nextInt((int) mainCanvas.getHeight() - (int) nodeRadius * 4) + nodeRadius * 2;
                 } while (isOverLap(x, y));
-                
+
                 circles[i] = new Point2D(x, y);
             }
         }
@@ -172,7 +172,7 @@ public class BrainCanvas {
                     String s = String.format("Best Path: [Distance] = %s, [Time] = %s, using %d paths", best.getDistance(), best.getTime(), correctConnections.size());
                     graphics.fillText(s, nodeRadius / 2, nodeRadius / 2);
                 }
-                
+
                 graphics.setStroke(Color.AZURE);
                 // make it thicker to go over the lines on the bottom
                 graphics.setLineWidth(6);
@@ -246,10 +246,10 @@ public class BrainCanvas {
                 graphics.fillText("" + counter++, circle.getX(), circle.getY());
             }
         }
-        
+
         graphics.restore();
     }
-    
+
     private void connectHandler(double x, double y, ClickMode mode) {
         int node;
         switch (mode) {
@@ -302,10 +302,10 @@ public class BrainCanvas {
                         start = end = null;
                     }
                 }
-            
+
         }
     }
-    
+
     private void connectPopup(ConnectDialogHandler handler) {
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/BrainGame/GUI/fxml/connectDialog.fxml"));
         Parent parent;
@@ -313,7 +313,7 @@ public class BrainCanvas {
             parent = loader.load();
             ConnectionDialogController controller = loader.getController();
             controller.addHandler(handler);
-            
+
             Scene scene = new Scene(parent, 500, 200);
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -322,13 +322,13 @@ public class BrainCanvas {
             //Icon to be edited
             stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/tmp.jpg")));
             stage.showAndWait();
-            
+
         } catch (IOException e) {
             e.printStackTrace();
-            
+
         }
     }
-    
+
     private void moveHandler(double x, double y, ClickMode mode) {
         int node;
         switch (mode) {
@@ -349,7 +349,7 @@ public class BrainCanvas {
                 }
         }
     }
-    
+
     private void disconnectHandler(double x, double y, ClickMode mode) {
         int node;
         switch (mode) {
@@ -390,7 +390,7 @@ public class BrainCanvas {
                 }
         }
     }
-    
+
     private void editConnectionHandler(double x, double y, ClickMode mode) {
         int node;
         switch (mode) {
@@ -441,7 +441,7 @@ public class BrainCanvas {
                 }
         }
     }
-    
+
     private void sendMessageHandler(double x, double y, ClickMode mode) {
         int node;
         switch (mode) {
@@ -481,35 +481,35 @@ public class BrainCanvas {
                 }
         }
     }
-    
+
     private void initGameLoop() {
         gameloop = new AnimationTimer() {
             long past = 0;
 
             // this function only called 30 times per second (~~ 30 FPS)
             private void realHandler(long now) {
-                
+
                 graphics.save();
                 graphics.setFill(Color.rgb(169, 169, 169, 0.90));
-                
+
                 graphics.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
                 // FPS
 //                graphics.setFill(Color.BLACK);
 //                graphics.fillText("" + 1000_000_000 / (now - past), 0, 10);
                 graphics.restore();
-                
+
                 update();
                 render();
-                
+
                 graphics.save();
                 graphics.setFont(Font.font(null, FontWeight.BOLD, 14));
                 graphics.setFill(Color.rgb(225, 235, 255));
                 graphics.fillText(String.format("format: " + DistanceTimeFormat, "distance", "time"), nodeRadius / 2, mainCanvas.getHeight() - nodeRadius / 2);
                 graphics.restore();
-                
+
                 past = now;
             }
-            
+
             @Override
             public void handle(long now) {
                 // because this is called so rapidly, try to reduce it.
@@ -519,11 +519,11 @@ public class BrainCanvas {
             }
         };
     }
-    
+
     public void startGraphicsLoop() {
         gameloop.start();
     }
-    
+
     public void newBrain(int numberOfNodes) {
         n_neurons = numberOfNodes;
         brain = new Brain(n_neurons);
@@ -534,7 +534,7 @@ public class BrainCanvas {
         start = end = null;
         canContinueAction = false;
     }
-    
+
     public void changeMode(String name) {
         currentMode = EditMode.valueOf(name);
         editHandler = handlersMap.get(currentMode);
