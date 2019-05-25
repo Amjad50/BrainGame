@@ -523,6 +523,8 @@ public class BrainCanvas {
         editHandler = handlersMap.get(currentMode);
 
         //clear variables used in tool modes
+        if (currentMode == EditMode.EDIT || currentMode == EditMode.DISCONNECT)
+            correctConnections.clear();
         start = end = null;
         startCircle = endCircle = -1;
         canContinueAction = false;
