@@ -235,7 +235,7 @@ public class BrainCanvas {
 
                 // set the insde body color and draw
                 if (Darkmode) {
-                    graphics.setFill(Color.rgb(238, 159, 46));
+                    graphics.setFill(Color.rgb(238, 159, 46, 0.75));
                 } else {
                     graphics.setFill(Color.rgb(220, 168, 53, 0.75));
                 }
