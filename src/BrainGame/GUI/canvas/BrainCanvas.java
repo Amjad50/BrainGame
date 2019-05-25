@@ -150,7 +150,7 @@ public class BrainCanvas {
         // check if there are any nodes to draw
         if (circles != null) {
             // draw the connection lines first (to be on bottom)
-            graphics.setStroke(Color.rgb(42, 37, 178,0.60));
+            graphics.setStroke(Color.rgb(42, 37, 178, 0.60));
             for (Point2D connection : connections) {
                 graphics.strokeLine(circles[(int) connection.getX()].getX(), circles[(int) connection.getX()].getY(),
                         circles[(int) connection.getY()].getX(), circles[(int) connection.getY()].getY());
@@ -179,16 +179,16 @@ public class BrainCanvas {
             // start drawing nodes circles
             int counter = 0;
             for (int i = 0; i < circles.length; i++) {
-               // get the circle to draw now
+                // get the circle to draw now
                 Point2D circle = circles[i];
 
                 // set the insde body color and draw
-              graphics.setFill(Color.rgb(84, 175, 71, 0.6));
+                graphics.setFill(Color.rgb(84, 175, 71, 0.6));
                 graphics.fillOval(circle.getX() - nodeRadius, circle.getY() - nodeRadius, nodeRadius * 2, nodeRadius * 2);
 
                 // set the color of the outer stroke (based on the mode)
                 // default color:
-                graphics.setStroke(Color.rgb(42, 37, 178,0.60));
+                graphics.setStroke(Color.rgb(42, 37, 178, 0.60));
                 if (canContinueAction && i == startCircle) {
                     if (currentMode == EditMode.MOVE) {
                         graphics.setStroke(Color.rgb(29, 5, 5));
@@ -335,22 +335,22 @@ public class BrainCanvas {
                 break;
             case END:
                 // now is the end node
-                if (canContinueAction) {
+                if (canContinueAction && endCircle != -1) {
                     canContinueAction = false;
-                    if (startCircle == endCircle) {
-                        return;
+                    if (startCircle != endCircle) {
+                        try {
+                            brain.removeConnection(startCircle, endCircle);
+                            connections.remove(new Point2D(startCircle, endCircle));
+                            connections.remove(new Point2D(endCircle, startCircle));
+                        } catch (NoConnectionException e) {
+                            Alert alertdialog = new Alert(Alert.AlertType.ERROR);
+                            alertdialog.setTitle("Disconnection Error");
+                            alertdialog.setHeaderText("Oops, you cannot remove a connection that is not there.");
+                            alertdialog.setContentText("Cannot disconnect these two nodes");
+                            alertdialog.showAndWait();
+                        }
                     }
-                    try {
-                        brain.removeConnection(startCircle, endCircle);
-                        connections.remove(new Point2D(startCircle, endCircle));
-                        connections.remove(new Point2D(endCircle, startCircle));
-                    } catch (NoConnectionException e) {
-                        Alert alertdialog = new Alert(Alert.AlertType.ERROR);
-                        alertdialog.setTitle("Disconnection Error");
-                        alertdialog.setHeaderText("Oops, you cannot remove a connection that is not there.");
-                        alertdialog.setContentText("Cannot disconnect these two nodes");
-                        alertdialog.showAndWait();
-                    }
+                    startCircle = endCircle = -1;
                 } else {
                     // start node end selection
                     canContinueAction = true;
@@ -376,32 +376,32 @@ public class BrainCanvas {
                 break;
             case END:
                 // now is the end node
-                if (canContinueAction) {
+                if (canContinueAction && endCircle != -1) {
                     canContinueAction = false;
-                    if (startCircle == endCircle) {
-                        return;
-                    }
-                    if (brain.checkConnection(startCircle, endCircle)) {
-                        connectPopup(pair -> {
-                            if (pair.getTime() > 0 && pair.getTime() > 0) {
-                                try {
-                                    brain.editConnection(startCircle, endCircle, pair.getDistance(), pair.getTime());
-                                } catch (NoConnectionException e) {
-                                    Alert alertdialog = new Alert(Alert.AlertType.ERROR);
-                                    alertdialog.setTitle("Edition Error");
-                                    alertdialog.setHeaderText("Oops, you cannot edit a non connected nodes. Please add connection.");
-                                    alertdialog.setContentText("Cannot edit connection between these two nodes");
-                                    alertdialog.showAndWait();
+                    if (startCircle != endCircle) {
+                        if (brain.checkConnection(startCircle, endCircle)) {
+                            connectPopup(pair -> {
+                                if (pair.getTime() > 0 && pair.getTime() > 0) {
+                                    try {
+                                        brain.editConnection(startCircle, endCircle, pair.getDistance(), pair.getTime());
+                                    } catch (NoConnectionException e) {
+                                        Alert alertdialog = new Alert(Alert.AlertType.ERROR);
+                                        alertdialog.setTitle("Edition Error");
+                                        alertdialog.setHeaderText("Oops, you cannot edit a non connected nodes. Please add connection.");
+                                        alertdialog.setContentText("Cannot edit connection between these two nodes");
+                                        alertdialog.showAndWait();
+                                    }
                                 }
-                            }
-                        });
-                    } else {
-                        Alert alertdialog = new Alert(Alert.AlertType.ERROR);
-                        alertdialog.setTitle("Edition Error");
-                        alertdialog.setHeaderText("Oops, you cannot edit a non connected nodes. Please add connection.");
-                        alertdialog.setContentText("Cannot edit connection between these two nodes");
-                        alertdialog.showAndWait();
+                            });
+                        } else {
+                            Alert alertdialog = new Alert(Alert.AlertType.ERROR);
+                            alertdialog.setTitle("Edition Error");
+                            alertdialog.setHeaderText("Oops, you cannot edit a non connected nodes. Please add connection.");
+                            alertdialog.setContentText("Cannot edit connection between these two nodes");
+                            alertdialog.showAndWait();
+                        }
                     }
+                    startCircle = endCircle = -1;
                 } else {
                     // start node end selection
                     canContinueAction = true;
@@ -426,22 +426,20 @@ public class BrainCanvas {
             case DURING:
                 break;
             case END:
-                //TODO: check if the target is node (also with other methods)
-
                 // now is the end node
-                if (canContinueAction) {
+                if (canContinueAction && endCircle != -1) {
                     canContinueAction = false;
-                    if (startCircle == endCircle) {
-                        return;
-                    }
-                    Path path = Search.search(brain, startCircle, endCircle);
-                    Brain.Neuron prev = null;
-                    for (Brain.Neuron n : path.getPath()) {
-                        if (prev != null) {
-                            correctConnections.add(new Point2D(prev.id, n.id));
+                    if (startCircle != endCircle) {
+                        Path path = Search.search(brain, startCircle, endCircle);
+                        Brain.Neuron prev = null;
+                        for (Brain.Neuron n : path.getPath()) {
+                            if (prev != null) {
+                                correctConnections.add(new Point2D(prev.id, n.id));
+                            }
+                            prev = n;
                         }
-                        prev = n;
                     }
+                    startCircle = endCircle = -1;
                 } else {
                     // start node end selection
                     canContinueAction = true;
