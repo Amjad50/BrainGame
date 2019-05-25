@@ -50,6 +50,7 @@ public class BrainCanvas {
     private Point2D[] circles = null;
     private ArrayList<Point2D> connections;
     private ArrayList<Point2D> correctConnections;
+    private DistanceTimePair best;
 
     //used to indicate that we can draw or move or delete (any action)
     private boolean canContinueAction = false;
@@ -159,10 +160,20 @@ public class BrainCanvas {
                 graphics.strokeLine(first.getX(), first.getY(), second.getX(), second.getY());
             }
 
-            // if we are in SEND mode and there is a path, draw it
+            // if there is a path, draw it with the best time info
             if (!correctConnections.isEmpty()) {
-                graphics.setStroke(Color.AZURE);
                 graphics.save();
+
+                // draw the time and distance info
+                graphics.setFill(Color.AZURE);
+                graphics.setFont(Font.font(null, FontWeight.BOLD, 17));
+                graphics.setTextBaseline(VPos.TOP);
+                if (best != null) {
+                    String s = String.format("Best Path: [Distance] = %s, [Time] = %s, using %d paths", best.getDistance(), best.getTime(), correctConnections.size());
+                    graphics.fillText(s, nodeRadius / 2, nodeRadius / 2);
+                }
+
+                graphics.setStroke(Color.AZURE);
                 // make it thicker to go over the lines on the bottom
                 graphics.setLineWidth(6);
                 for (Point2D connection : correctConnections) {
@@ -453,6 +464,7 @@ public class BrainCanvas {
                     canContinueAction = false;
                     if (startCircle != endCircle) {
                         Path path = Search.search(brain, startCircle, endCircle);
+                        best = new DistanceTimePair(path.getDistance(), path.getTime());
                         Brain.Neuron prev = null;
                         for (Brain.Neuron n : path.getPath()) {
                             if (prev != null) {
