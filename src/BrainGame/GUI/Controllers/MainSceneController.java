@@ -13,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 
 public class MainSceneController {
@@ -23,6 +24,9 @@ public class MainSceneController {
 
     @FXML
     private ToggleGroup toolsGroup;
+    
+    @FXML
+    private CheckBox DisplayMode;
 
     @FXML
     private void initialize() {
@@ -61,5 +65,14 @@ public class MainSceneController {
 
     private void newBrainHandler(NewDialogHandler.Result result) {
         brainCanvas.newBrain(result.getNumberOfNodes());
+    }
+    
+    @FXML
+    private void ChangeDisplayMode(){
+        if(DisplayMode.isSelected()){
+            System.out.println("am checked");  
+        }else{
+            System.out.println("am not");
+        }
     }
 }

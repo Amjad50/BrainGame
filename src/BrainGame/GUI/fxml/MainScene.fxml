@@ -21,7 +21,8 @@
                 <ToggleButton text="Move nodes" toggleGroup="$toolsGroup" userData="MOVE" />
                 <ToggleButton text="Edit connection" toggleGroup="$toolsGroup" userData="EDIT" />
                 <ToggleButton text="Remove connection" toggleGroup="$toolsGroup" userData="DISCONNECT" />
-               
+               <Region  prefWidth="188.0" />
+               <CheckBox fx:id="DisplayMode"  onAction="#ChangeDisplayMode" text="Dark Mode"/>
             </ToolBar>
         </VBox>
 
