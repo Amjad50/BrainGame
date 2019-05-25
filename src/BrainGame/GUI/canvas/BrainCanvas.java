@@ -18,8 +18,10 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -30,8 +32,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import javafx.scene.image.Image;
-import javafx.scene.shape.StrokeLineCap;
 
 public class BrainCanvas {
 
@@ -496,5 +496,10 @@ public class BrainCanvas {
         currentMode = EditMode.valueOf(name);
         editHandler = handlersMap.get(currentMode);
 
+        //clear variables used in tool modes
+        correctConnections.clear();
+        start = end = null;
+        startCircle = endCircle = -1;
+        canContinueAction = false;
     }
 }
