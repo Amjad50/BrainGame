@@ -160,7 +160,7 @@ public class BrainCanvas {
             }
 
             // if we are in SEND mode and there is a path, draw it
-            if (currentMode == EditMode.SEND && !correctConnections.isEmpty()) {
+            if (!correctConnections.isEmpty()) {
                 graphics.setStroke(Color.AZURE);
                 graphics.save();
                 // make it thicker to go over the lines on the bottom
@@ -523,7 +523,6 @@ public class BrainCanvas {
         editHandler = handlersMap.get(currentMode);
 
         //clear variables used in tool modes
-        correctConnections.clear();
         start = end = null;
         startCircle = endCircle = -1;
         canContinueAction = false;
