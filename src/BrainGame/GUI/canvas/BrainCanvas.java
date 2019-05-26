@@ -157,7 +157,7 @@ public class BrainCanvas {
             if (isDarkMode) {
                 graphics.setStroke(Color.rgb(117, 56, 101));
             } else {
-                graphics.setStroke(Color.rgb(1, 0, 0, 0.88));
+                graphics.setStroke(Color.LIGHTSLATEGREY);
             }
             for (Point2D connection : connections) {
                 Point2D first = circles[(int) connection.getX()],
@@ -184,9 +184,9 @@ public class BrainCanvas {
                 }
 
                 if (isDarkMode) {
-                    graphics.setStroke(Color.AZURE);
+                    graphics.setStroke(Color.DODGERBLUE);
                 } else {
-                    graphics.setStroke(Color.BURLYWOOD);
+                    graphics.setStroke(Color.rgb(255, 172, 84));
                 }
                 // make it thicker to go over the lines on the bottom
                 graphics.setLineWidth(6);
@@ -248,7 +248,7 @@ public class BrainCanvas {
                     graphics.setStroke(Color.rgb(238, 159, 46));
 
                 } else {
-                    graphics.setStroke(Color.rgb(220, 168, 53, 0.85));
+                    graphics.setStroke(Color.rgb(220, 168, 53));
                 }
 
                 if (canContinueAction && i == startCircle) {
@@ -535,11 +535,11 @@ public class BrainCanvas {
                 render();
 
                 graphics.save();
-                graphics.setFont(new Font("Arial", 12));
+                graphics.setFont(Font.font("Arial", FontWeight.BOLD, 14));
                 if (isDarkMode) {
                     graphics.setFill(Color.rgb(191, 187, 190));
                 } else {
-                    graphics.setFill(Color.CADETBLUE);
+                    graphics.setFill(Color.CORNFLOWERBLUE);
                 }
 
                 graphics.fillText(String.format("Format: " + DistanceTimeFormat, "Distance", "Time"), nodeRadius / 2, mainCanvas.getHeight() - nodeRadius / 2);
