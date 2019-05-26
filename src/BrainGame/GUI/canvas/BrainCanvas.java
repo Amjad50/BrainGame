@@ -44,7 +44,7 @@ public class BrainCanvas {
     private AnimationTimer gameloop;
     private Canvas mainCanvas;
     private GraphicsContext graphics;
-    private boolean Darkmode = false;
+    private boolean isDarkMode = false;
 
     private int n_neurons;
 
@@ -154,7 +154,7 @@ public class BrainCanvas {
         // check if there are any nodes to draw
         if (circles != null) {
             // draw the connection lines first (to be on bottom)
-            if (Darkmode) {
+            if (isDarkMode) {
                 graphics.setStroke(Color.rgb(117, 56, 101));
             } else {
                 graphics.setStroke(Color.rgb(1, 0, 0, 0.88));
@@ -170,7 +170,7 @@ public class BrainCanvas {
                 graphics.save();
 
                 // draw the time and distance info
-                if (Darkmode) {
+                if (isDarkMode) {
                     graphics.setFill(Color.rgb(176, 105, 11));
                 } else {
                     graphics.setFill(Color.rgb(12, 2, 1, 0.8));
@@ -183,7 +183,7 @@ public class BrainCanvas {
                     graphics.fillText(s, nodeRadius / 2, nodeRadius / 2);
                 }
 
-                if (Darkmode) {
+                if (isDarkMode) {
                     graphics.setStroke(Color.AZURE);
                 } else {
                     graphics.setStroke(Color.BURLYWOOD);
@@ -218,7 +218,7 @@ public class BrainCanvas {
                 // draw
                 graphics.setTextBaseline(VPos.BOTTOM);
                 graphics.setTextAlign(TextAlignment.CENTER);
-                if (Darkmode) {
+                if (isDarkMode) {
                     graphics.setFill(Color.rgb(191, 187, 190));
                 } else {
                     graphics.setFill(Color.rgb(1, 0, 0, 0.7));
@@ -234,7 +234,7 @@ public class BrainCanvas {
                 Point2D circle = circles[i];
 
                 // set the insde body color and draw
-                if (Darkmode) {
+                if (isDarkMode) {
                     graphics.setFill(Color.rgb(238, 159, 46, 0.75));
                 } else {
                     graphics.setFill(Color.rgb(220, 168, 53, 0.75));
@@ -244,7 +244,7 @@ public class BrainCanvas {
 
                 // set the color of the outer stroke (based on the mode)
                 // default color:
-                if (Darkmode) {
+                if (isDarkMode) {
                     graphics.setStroke(Color.rgb(238, 159, 46));
 
                 } else {
@@ -519,7 +519,7 @@ public class BrainCanvas {
             private void realHandler(long now) {
 
                 graphics.save();
-                if (Darkmode) {
+                if (isDarkMode) {
                     graphics.setFill(Color.rgb(45, 45, 45, 0.8));
                 } else {
                     graphics.setFill(Color.rgb(247, 246, 246));
@@ -536,7 +536,7 @@ public class BrainCanvas {
 
                 graphics.save();
                 graphics.setFont(new Font("Arial", 12));
-                if (Darkmode) {
+                if (isDarkMode) {
                     graphics.setFill(Color.rgb(191, 187, 190));
                 } else {
                     graphics.setFill(Color.CADETBLUE);
@@ -586,12 +586,8 @@ public class BrainCanvas {
         canContinueAction = false;
     }
 
-    public void changedisplay(boolean changemode) {
-        if (changemode) {
-            Darkmode = true;
-        } else {
-            Darkmode = false;
-        }
+    public void changeDisplayMode(boolean new_isDarkMode) {
+        isDarkMode = new_isDarkMode;
     }
 
 }

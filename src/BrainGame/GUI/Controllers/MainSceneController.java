@@ -7,14 +7,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import javafx.scene.control.CheckBox;
-import javafx.scene.image.Image;
 
 public class MainSceneController {
 
@@ -24,7 +24,7 @@ public class MainSceneController {
 
     @FXML
     private ToggleGroup toolsGroup;
-    
+
     @FXML
     private CheckBox DisplayMode;
 
@@ -66,13 +66,9 @@ public class MainSceneController {
     private void newBrainHandler(NewDialogHandler.Result result) {
         brainCanvas.newBrain(result.getNumberOfNodes());
     }
-    
+
     @FXML
-    private void ChangeDisplayMode(){
-        if(DisplayMode.isSelected()){
-            brainCanvas.changedisplay(true);
-        }else{
-            brainCanvas.changedisplay(false);
-        }
+    private void ChangeDisplayMode() {
+        brainCanvas.changeDisplayMode(DisplayMode.isSelected());
     }
 }
