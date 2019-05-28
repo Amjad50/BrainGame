@@ -319,8 +319,8 @@ public class BrainCanvas {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.setTitle("Connect");
-            //Icon to be edited
-            stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/tmp.jpg")));
+            
+            stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/DS-Logo.png")));
             stage.showAndWait();
 
         } catch (IOException e) {
