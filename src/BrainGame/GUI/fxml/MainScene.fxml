@@ -2,11 +2,13 @@
 
 <?import javafx.geometry.Insets?><?import javafx.scene.canvas.Canvas?><?import javafx.scene.control.*?><?import javafx.scene.layout.*?>
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrainGame.GUI.Controllers.MainSceneController">
+    xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrainGame.GUI.Controllers.MainSceneController">
     <top>
         <VBox>
-            <HBox prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
+            <HBox BorderPane.alignment="CENTER" alignment="CENTER" prefWidth="600.0" spacing="20.0">
                 <Button onAction="#showNewBrainDialog" text="New" />
+                <Region HBox.hgrow="ALWAYS" />
+                <CheckBox onAction="#ChangeDisplayMode" text="Dark Mode" fx:id="DisplayMode" />
                 <padding>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </padding>
@@ -15,13 +17,12 @@
                 <fx:define>
                     <ToggleGroup fx:id="toolsGroup" />
                 </fx:define>
-                
+
                 <ToggleButton text="Add connection" toggleGroup="$toolsGroup" userData="CONNECT" />
                 <ToggleButton text="Send message" toggleGroup="$toolsGroup" userData="SEND" />
                 <ToggleButton text="Move nodes" toggleGroup="$toolsGroup" userData="MOVE" />
                 <ToggleButton text="Edit connection" toggleGroup="$toolsGroup" userData="EDIT" />
                 <ToggleButton text="Remove connection" toggleGroup="$toolsGroup" userData="DISCONNECT" />
-               
             </ToolBar>
         </VBox>
 
