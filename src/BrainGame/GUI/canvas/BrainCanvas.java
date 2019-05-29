@@ -228,7 +228,8 @@ public class BrainCanvas {
             }
 
             // start drawing nodes circles
-            int counter = 0;
+            // start from one only in drawing to make it better for the user.
+            int counter = 1;
             for (int i = 0; i < circles.length; i++) {
                 // get the circle to draw now
                 Point2D circle = circles[i];
