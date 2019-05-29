@@ -39,7 +39,7 @@ public class MainMenu {
         Menu.add(exit);
         exit.addActionListener(e -> System.exit(0));
 
-        ImageIcon picture = new ImageIcon("Brain.png");
+        ImageIcon picture = new ImageIcon("images/Brain.png");
         JLabel imageLabel = new JLabel(picture);
         imageLabel.setBounds(0, 0, 500, 500);
         imageLabel.setVisible(true);
