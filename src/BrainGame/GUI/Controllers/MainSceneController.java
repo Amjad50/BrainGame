@@ -3,11 +3,11 @@ package BrainGame.GUI.Controllers;
 import BrainGame.GUI.MainApplication;
 import BrainGame.GUI.canvas.BrainCanvas;
 import BrainGame.handlers.NewDialogHandler;
-import java.io.File;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -16,9 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.logging.Logger;
-import javafx.scene.control.Button;
-import javafx.stage.FileChooser;
 
 public class MainSceneController {
 
@@ -82,7 +79,7 @@ public class MainSceneController {
     @FXML
     private void SaveImage() {
 
-        brainCanvas.Saveimage();
+        brainCanvas.saveImage();
 
     }
 }

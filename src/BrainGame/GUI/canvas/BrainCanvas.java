@@ -10,9 +10,8 @@ import BrainGame.handlers.ConnectDialogHandler;
 import BrainGame.handlers.ModeHandler;
 import BrainGame.tools.AlreadyConnectedException;
 import BrainGame.tools.NoConnectionException;
-import java.awt.image.RenderedImage;
-import java.io.File;
 import javafx.animation.AnimationTimer;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
@@ -22,25 +21,26 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.WritableImage;
-import javafx.stage.FileChooser;
-import javax.imageio.ImageIO;
 
 public class BrainCanvas {
 
@@ -69,6 +69,8 @@ public class BrainCanvas {
     private HashMap<EditMode, ModeHandler> handlersMap;
     private ModeHandler editHandler;
     private EditMode currentMode;
+
+    private File toSaveImage;
 
     public BrainCanvas(Pane container) {
         // dangerous code (VERY)
@@ -554,6 +556,19 @@ public class BrainCanvas {
                 graphics.fillText(String.format("Format: " + DistanceTimeFormat, "Distance", "Time"), nodeRadius / 2, mainCanvas.getHeight() - nodeRadius / 2);
                 graphics.restore();
 
+                if (toSaveImage != null) {
+                    try {
+                        WritableImage writableImage = new WritableImage((int) mainCanvas.getWidth(), (int) mainCanvas.getHeight());
+                        mainCanvas.snapshot(null, writableImage);
+                        RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                        ImageIO.write(renderedImage, "png", toSaveImage);
+                    } catch (IOException ex) {
+                        Logger.getLogger(BrainCanvas.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        toSaveImage = null;
+                    }
+                }
+
                 past = now;
             }
 
@@ -599,20 +614,13 @@ public class BrainCanvas {
         isDarkMode = new_isDarkMode;
     }
 
-    public void Saveimage() {
+    public void saveImage() {
         FileChooser fc = new FileChooser();
-        FileChooser.ExtensionFilter extnsionFilter = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
-        fc.getExtensionFilters().add(extnsionFilter);
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
+        fc.getExtensionFilters().add(extensionFilter);
         File SelectedFile = fc.showSaveDialog(null);
         if (SelectedFile != null) {
-            try {
-                WritableImage writableImage = new WritableImage((int) mainCanvas.getWidth(), (int) mainCanvas.getHeight());
-                mainCanvas.snapshot(null, writableImage);
-                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-                ImageIO.write(renderedImage, "png", SelectedFile);
-            } catch (IOException ex) {
-                Logger.getLogger(BrainCanvas.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            toSaveImage = SelectedFile;
         }
 
     }
