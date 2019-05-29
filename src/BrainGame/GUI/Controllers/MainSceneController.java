@@ -3,6 +3,7 @@ package BrainGame.GUI.Controllers;
 import BrainGame.GUI.MainApplication;
 import BrainGame.GUI.canvas.BrainCanvas;
 import BrainGame.handlers.NewDialogHandler;
+import java.io.File;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +16,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
 
 public class MainSceneController {
 
@@ -27,7 +30,8 @@ public class MainSceneController {
 
     @FXML
     private CheckBox DisplayMode;
-
+    @FXML
+    private Button SavePicture;
     @FXML
     private void initialize() {
         brainCanvas = new BrainCanvas(canvasContainer);
@@ -70,5 +74,10 @@ public class MainSceneController {
     @FXML
     private void ChangeDisplayMode() {
         brainCanvas.changeDisplayMode(DisplayMode.isSelected());
+    }
+    @FXML
+    private void SaveImage(){
+      FileChooser fc = new FileChooser();
+      File SelectedFile = fc.showSaveDialog(null);
     }
 }
