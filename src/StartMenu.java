@@ -1,15 +1,22 @@
-
 import BrainGame.GUI.MainApplication;
 import com.sun.javafx.application.PlatformImpl;
-import java.io.*;
-import javafx.event.*;
-import javafx.scene.*;
-import javafx.application.*;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.*;
-import javafx.scene.media.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class StartMenu extends Application implements EventHandler<ActionEvent> {
 
@@ -26,6 +33,8 @@ public class StartMenu extends Application implements EventHandler<ActionEvent> 
         Media media = new Media(new File(musicFile).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
+        mediaPlayer.pause();
+        mediaPlayer.setMute(true);
        
 
         MediaView mediaView = new MediaView(mediaPlayer);
@@ -46,7 +55,7 @@ public class StartMenu extends Application implements EventHandler<ActionEvent> 
         button2.setOnAction(e -> System.exit(0));
 
         //Sound Button
-        Button Soundbutton1 = new Button("\uD83D\uDD0A");
+        Button Soundbutton1 = new Button("\uD83D\uDD08");
         Soundbutton1.setOnAction(e -> {
             if (mediaPlayer.isMute()) {
                 mediaPlayer.setMute(false);
