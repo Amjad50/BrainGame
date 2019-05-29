@@ -43,6 +43,7 @@ public class Brain {
         }
 
         nodes[source].children.replace(nodes[distention], new DistanceTimePair(distance, time));
+        nodes[distention].children.replace(nodes[source], new DistanceTimePair(distance, time));
     }
 
     public boolean checkConnection(int source, int distention) {
