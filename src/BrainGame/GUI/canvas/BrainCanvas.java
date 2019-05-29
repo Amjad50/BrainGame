@@ -10,6 +10,8 @@ import BrainGame.handlers.ConnectDialogHandler;
 import BrainGame.handlers.ModeHandler;
 import BrainGame.tools.AlreadyConnectedException;
 import BrainGame.tools.NoConnectionException;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -33,6 +35,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.WritableImage;
+import javafx.stage.FileChooser;
+import javax.imageio.ImageIO;
 
 public class BrainCanvas {
 
@@ -349,7 +357,7 @@ public class BrainCanvas {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.setTitle("Connect");
-            
+
             stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/DS-Logo.png")));
             stage.showAndWait();
 
@@ -589,6 +597,24 @@ public class BrainCanvas {
 
     public void changeDisplayMode(boolean new_isDarkMode) {
         isDarkMode = new_isDarkMode;
+    }
+
+    public void Saveimage() {
+        FileChooser fc = new FileChooser();
+        FileChooser.ExtensionFilter extnsionFilter = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
+        fc.getExtensionFilters().add(extnsionFilter);
+        File SelectedFile = fc.showSaveDialog(null);
+        if (SelectedFile != null) {
+            try {
+                WritableImage writableImage = new WritableImage((int) mainCanvas.getWidth(), (int) mainCanvas.getHeight());
+                mainCanvas.snapshot(null, writableImage);
+                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                ImageIO.write(renderedImage, "png", SelectedFile);
+            } catch (IOException ex) {
+                Logger.getLogger(BrainCanvas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
 
 }

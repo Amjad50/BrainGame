@@ -16,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 
@@ -32,6 +33,7 @@ public class MainSceneController {
     private CheckBox DisplayMode;
     @FXML
     private Button SavePicture;
+
     @FXML
     private void initialize() {
         brainCanvas = new BrainCanvas(canvasContainer);
@@ -42,10 +44,11 @@ public class MainSceneController {
 
     private void initToolBarListener() {
         toolsGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null)
+            if (newValue != null) {
                 brainCanvas.changeMode((String) newValue.getUserData());
-            else
+            } else {
                 brainCanvas.changeMode("NOTHING");
+            }
         });
     }
 
@@ -62,7 +65,7 @@ public class MainSceneController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.setTitle("New");
-        
+
         stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/DS-Logo.png")));
         stage.showAndWait();
     }
@@ -75,9 +78,11 @@ public class MainSceneController {
     private void ChangeDisplayMode() {
         brainCanvas.changeDisplayMode(DisplayMode.isSelected());
     }
+
     @FXML
-    private void SaveImage(){
-      FileChooser fc = new FileChooser();
-      File SelectedFile = fc.showSaveDialog(null);
+    private void SaveImage() {
+
+        brainCanvas.Saveimage();
+
     }
 }

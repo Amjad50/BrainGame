@@ -24,9 +24,9 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         stage.setTitle("Brain Game Simulator");
         stage.sizeToScene();
-        
         stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/DS-Logo.png")));
         stage.show();
+        stage.setOnCloseRequest(e -> System.exit(0));
 
     }
 
