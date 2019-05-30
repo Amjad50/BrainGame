@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -27,6 +28,8 @@ public class MainSceneController {
 
     @FXML
     private CheckBox DisplayMode;
+    @FXML
+    private Button SavePicture;
 
     @FXML
     private void initialize() {
@@ -38,10 +41,11 @@ public class MainSceneController {
 
     private void initToolBarListener() {
         toolsGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null)
+            if (newValue != null) {
                 brainCanvas.changeMode((String) newValue.getUserData());
-            else
+            } else {
                 brainCanvas.changeMode("NOTHING");
+            }
         });
     }
 
@@ -58,7 +62,7 @@ public class MainSceneController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.setTitle("New");
-        
+
         stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/DS-Logo.png")));
         stage.showAndWait();
     }
@@ -70,5 +74,12 @@ public class MainSceneController {
     @FXML
     private void ChangeDisplayMode() {
         brainCanvas.changeDisplayMode(DisplayMode.isSelected());
+    }
+
+    @FXML
+    private void SaveImage() {
+
+        brainCanvas.saveImage();
+
     }
 }

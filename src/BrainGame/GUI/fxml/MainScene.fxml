@@ -2,11 +2,12 @@
 
 <?import javafx.geometry.Insets?><?import javafx.scene.canvas.Canvas?><?import javafx.scene.control.*?><?import javafx.scene.layout.*?>
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
-    xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrainGame.GUI.Controllers.MainSceneController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrainGame.GUI.Controllers.MainSceneController">
     <top>
         <VBox>
             <HBox BorderPane.alignment="CENTER" alignment="CENTER" prefWidth="600.0" spacing="20.0">
                 <Button onAction="#showNewBrainDialog" text="New" />
+                <Button onAction="#SaveImage" text="Save Picture" fx:id="SavePicture"/>
                 <Region HBox.hgrow="ALWAYS" />
                 <CheckBox onAction="#ChangeDisplayMode" text="Dark Mode" fx:id="DisplayMode" />
                 <padding>

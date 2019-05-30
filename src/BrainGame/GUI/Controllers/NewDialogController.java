@@ -6,6 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.util.logging.Level;
@@ -46,5 +48,11 @@ public class NewDialogController {
     @FXML
     private void closeStage(ActionEvent actionEvent) {
         Platform.runLater(() -> ((Stage)((Node)actionEvent.getSource()).getScene().getWindow()).close());
+    }
+
+    @FXML
+    private void keyPressed(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER)
+            sendData(new ActionEvent(keyEvent.getSource(), keyEvent.getTarget()));
     }
 }

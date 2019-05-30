@@ -11,6 +11,7 @@ import BrainGame.handlers.ModeHandler;
 import BrainGame.tools.AlreadyConnectedException;
 import BrainGame.tools.NoConnectionException;
 import javafx.animation.AnimationTimer;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.VPos;
@@ -20,19 +21,26 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BrainCanvas {
 
@@ -61,6 +69,8 @@ public class BrainCanvas {
     private HashMap<EditMode, ModeHandler> handlersMap;
     private ModeHandler editHandler;
     private EditMode currentMode;
+
+    private File toSaveImage;
 
     public BrainCanvas(Pane container) {
         // dangerous code (VERY)
@@ -228,7 +238,8 @@ public class BrainCanvas {
             }
 
             // start drawing nodes circles
-            int counter = 0;
+            // start from one only in drawing to make it better for the user.
+            int counter = 1;
             for (int i = 0; i < circles.length; i++) {
                 // get the circle to draw now
                 Point2D circle = circles[i];
@@ -348,7 +359,7 @@ public class BrainCanvas {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.setTitle("Connect");
-            
+
             stage.getIcons().add(new Image(MainApplication.class.getResourceAsStream("Icons/DS-Logo.png")));
             stage.showAndWait();
 
@@ -545,6 +556,19 @@ public class BrainCanvas {
                 graphics.fillText(String.format("Format: " + DistanceTimeFormat, "Distance", "Time"), nodeRadius / 2, mainCanvas.getHeight() - nodeRadius / 2);
                 graphics.restore();
 
+                if (toSaveImage != null) {
+                    try {
+                        WritableImage writableImage = new WritableImage((int) mainCanvas.getWidth(), (int) mainCanvas.getHeight());
+                        mainCanvas.snapshot(null, writableImage);
+                        RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                        ImageIO.write(renderedImage, "png", toSaveImage);
+                    } catch (IOException ex) {
+                        Logger.getLogger(BrainCanvas.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        toSaveImage = null;
+                    }
+                }
+
                 past = now;
             }
 
@@ -588,6 +612,17 @@ public class BrainCanvas {
 
     public void changeDisplayMode(boolean new_isDarkMode) {
         isDarkMode = new_isDarkMode;
+    }
+
+    public void saveImage() {
+        FileChooser fc = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
+        fc.getExtensionFilters().add(extensionFilter);
+        File SelectedFile = fc.showSaveDialog(null);
+        if (SelectedFile != null) {
+            toSaveImage = SelectedFile;
+        }
+
     }
 
 }
